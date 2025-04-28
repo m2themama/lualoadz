@@ -84,11 +84,4 @@ The server runs on port 3000 by default. To change the port, modify the `server.
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
-
-This project is licensed under the terms of the included LICENSE file.
-
-## Support
-
-For support, please open an issue in the GitHub repository. 
 
