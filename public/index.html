@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LuaLoadz</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #0050d8;
+        --primary-dark: #003087;
+        --success: #10b981;
+        --error: #ef4444;
+        --warning: #f59e0b;
+        --background: #10131a;
+        --surface: #181a20;
+        --surface-light: #23263a;
+        --text-primary: #ffffff;
+        --text-secondary: #bfc9db;
+        --border: #2a2d3a;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+          0 2px 4px -1px rgba(0, 0, 0, 0.3);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--background);
+        color: var(--text-primary);
+        line-height: 1.5;
+        min-height: 100vh;
+        padding: 1rem;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: var(--surface);
+        border-radius: 0.5rem;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: var(--text-primary);
+        padding: 1.5rem;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        border-radius: 0.75rem;
+        margin-bottom: 2rem;
+      }
+
+      .header h1 {
+        font-size: 2.2rem;
+        font-family: "Orbitron", "Inter", sans-serif;
+        font-weight: 700;
+        margin-bottom: 0.7rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+        letter-spacing: 2px;
+      }
+
+      #bacedgod {
+        text-align: center;
+        font-size: 1.25rem;
+        opacity: 0.93;
+        font-family: "Orbitron", "Inter", sans-serif;
+      }
+
+      .header p {
+        font-size: 1.05rem;
+        opacity: 0.93;
+      }
+
+      .header a {
+        color: #7cb8ff;
+        text-decoration: underline;
+      }
+      .header a:hover {
+        color: #ffffff;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group:first-of-type {
+        margin-top: 1.5rem;
+      }
+
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      input[type="file"] {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: var(--surface-light);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        transition: all 0.2s;
+      }
+
+      input[type="text"]:focus,
+      input[type="number"]:focus,
+      input[type="file"]:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+      }
+
+      .file-selection {
+        margin: 1.5rem 0;
+        padding: 1rem;
+        background-color: var(--surface-light);
+        border-radius: 0.375rem;
+        border: 1px solid var(--border);
+      }
+
+      .file-selection h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+      }
+
+      .file-option {
+        margin-bottom: 0.5rem;
+        padding: 0.75rem;
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        transition: all 0.2s;
+      }
+
+      .file-option:hover {
+        border-color: var(--primary);
+        background-color: rgba(124, 58, 237, 0.1);
+      }
+
+      .file-option label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        margin: 0;
+      }
+
+      .file-option input[type="radio"] {
+        margin-right: 0.75rem;
+        width: 1rem;
+        height: 1rem;
+        accent-color: var(--primary);
+      }
+
+      .file-option .file-info {
+        margin-left: 0.75rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+      }
+
+      .manual-file-input {
+        margin-top: 0.75rem;
+        padding: 0.75rem;
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        display: none;
+      }
+
+      .manual-file-input.active {
+        display: block;
+      }
+
+      input[type="file"] {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: var(--surface-light);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        color: var(--text-primary);
+      }
+
+      button {
+        width: 100%;
+        padding: 0.75rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: var(--text-primary);
+        border: none;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      button:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark) 0%,
+          var(--primary) 100%
+        );
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+      }
+
+      #status {
+        margin: 1rem 0;
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        display: none;
+        border: 1px solid var(--border);
+      }
+
+      .success {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+        border: 1px solid var(--success);
+      }
+
+      .error {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: var(--error);
+        border: 1px solid var(--error);
+      }
+
+      .tabs {
+        display: flex;
+        border-bottom: 1px solid var(--border);
+        margin-top: 1.5rem;
+        background-color: var(--surface-light);
+        border-radius: 0.5rem 0.5rem 0 0;
+        overflow: hidden;
+      }
+
+      .tab {
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+      }
+
+      .tab.active {
+        color: #7cb8ff;
+        border-bottom-color: #7cb8ff;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 1rem;
+        border-radius: 0 0 0.5rem 0.5rem;
+        background: var(--surface-light);
+        margin-bottom: 2rem;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .log-container,
+      .technical-log {
+        height: 300px;
+        overflow-y: auto;
+        padding: 1rem;
+        background-color: var(--surface-light);
+        border-radius: 0.5rem;
+        font-family: "Courier New", monospace;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        border: 1px solid var(--border);
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0 auto;
+      }
+
+      .technical-log {
+        height: 300px;
+        overflow-y: auto;
+        padding: 1rem;
+        background-color: #0a0a0a;
+        color: #d4d4d4;
+        border-radius: 0.375rem;
+        font-family: "Courier New", monospace;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        border: 1px solid var(--border);
+      }
+
+      .technical-log .timestamp {
+        color: #6b7280;
+      }
+
+      .technical-log .send {
+        color: #10b981;
+      }
+
+      .technical-log .receive {
+        color: #3b82f6;
+      }
+
+      .technical-log .error {
+        color: #ef4444;
+      }
+
+      .technical-log .info {
+        color: #f59e0b;
+      }
+
+      .technical-log .exploit {
+        color: #8b5cf6;
+      }
+
+      .technical-log .success {
+        color: #10b981;
+      }
+
+      .technical-log .config {
+        color: #f59e0b;
+      }
+
+      .exploit-output {
+        background-color: #0a0a0a;
+        color: #d4d4d4;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        margin: 0.5rem 0;
+        font-family: "Courier New", monospace;
+        white-space: pre;
+        border: 1px solid var(--border);
+      }
+
+      .exploit-output .config {
+        color: #f59e0b;
+      }
+
+      .expl .success {
+        color: #10b981;
+      }
+
+      .exploit-output .attempt {
+        color: #8b5cf6;
+      }
+
+      .exploit-output .error {
+        color: #ef4444;
+      }
+
+      @media (min-width: 640px) {
+        body {
+          padding: 2rem;
+        }
+
+        .header h1 {
+          font-size: 1.875rem;
+        }
+
+        .header p {
+          font-size: 1rem;
+        }
+
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+
+        .file-selection {
+          padding: 1.5rem;
+        }
+
+        .file-selection h3 {
+          font-size: 1.125rem;
+        }
+
+        .log-container,
+        .technical-log {
+          height: 400px;
+        }
+      }
+
+      /* PS5 SVG background */
+      .ps5-bg {
+        position: fixed;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        width: 100vw;
+        max-width: 1800px;
+        min-width: 600px;
+        height: auto;
+        opacity: 0.16;
+        z-index: 0;
+        pointer-events: none;
+        user-select: none;
+      }
+      /* Code rain canvas overlay */
+      #spark-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.13;
+      }
+
+      .network-scan {
+        margin-top: 1rem;
+      }
+
+      .scan-controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 0.5rem;
+      }
+
+      .scan-status {
+        margin: 0.5rem 0;
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        display: none;
+      }
+
+      .scan-status.scanning {
+        display: block;
+        background-color: rgba(245, 158, 11, 0.1);
+        color: var(--warning);
+        border: 1px solid var(--warning);
+      }
+
+      .scan-status.success {
+        display: block;
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+        border: 1px solid var(--success);
+      }
+
+      .scan-status.error {
+        display: block;
+        background-color: rgba(239, 68, 68, 0.1);
+        color: var(--error);
+        border: 1px solid var(--error);
+      }
+
+      .ps5-devices {
+        margin-top: 0.5rem;
+      }
+
+      .ps5-devices select {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: var(--surface-light);
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="spark-canvas"></canvas>
+    <img
+      class="ps5-bg"
+      src="data:image/svg+xml;utf8,<svg width='1600' height='400' viewBox='0 0 1600 400' fill='none' xmlns='http://www.w3.org/2000/svg'><g opacity='0.8'><ellipse cx='1200' cy='340' rx='220' ry='50' fill='%230050d8'/><rect x='1100' y='120' width='220' height='200' rx='70' fill='%23bfc9db' stroke='%230050d8' stroke-width='12'/><rect x='1160' y='170' width='100' height='120' rx='36' fill='%23181a20' stroke='%230050d8' stroke-width='6'/><ellipse cx='1300' cy='340' rx='60' ry='18' fill='%23181a20'/><ellipse cx='400' cy='360' rx='160' ry='36' fill='%230050d8'/><rect x='220' y='240' width='320' height='100' rx='50' fill='%23bfc9db' stroke='%230050d8' stroke-width='12'/><rect x='270' y='270' width='220' height='40' rx='20' fill='%23181a20' stroke='%230050d8' stroke-width='6'/></g><g opacity='0.5'><ellipse cx='800' cy='390' rx='600' ry='30' fill='%230050d8'/></g><g opacity='0.18'><path d='M0 380 Q800 320 1600 380' stroke='%237cb8ff' stroke-width='8' fill='none'/></g></svg>"
+      alt="PS5 Console and Controller"
+    />
+    <div class="container">
+      <div class="header">
+        <h1>LuaLoadz</h1>
+        <p>
+          Use this tool to send your LUA files to a compatible PS5 running the
+          <a href="https://github.com/shahrilnet/remote_lua_loader">
+            remote-lua-loader with a compatible game (see repo for a list of
+            compatible games).</a
+          >
+          If you have the ELF loader running, you can start sending your ELF
+          files.
+        </p>
+      </div>
+
+      <form id="luaForm" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="ipAddress">IP Address:</label>
+          <div class="input-group">
+            <input type="text" id="ipAddress" name="ipAddress" required />
+          </div>
+          <div class="network-scan">
+            <div class="scan-controls">
+              <button id="scanNetwork" class="btn btn-primary">
+                Scan Network
+              </button>
+            </div>
+            <div id="scanStatus" class="scan-status"></div>
+            <div id="ps5Devices" class="ps5-devices" style="display: none">
+              <select id="availableIPs" class="form-control">
+                <option value="">Select a PS5 device</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="port">Port</label>
+          <input
+            type="number"
+            id="port"
+            name="port"
+            placeholder="9026"
+            value="9026"
+            readonly
+          />
+        </div>
+
+        <div class="file-selection">
+          <h3>Lua (Port 9026)</h3>
+          <div class="file-option">
+            <label>
+              <input
+                type="radio"
+                name="fileType"
+                value="umtx.lua"
+                data-port="9026"
+              />
+              <span>umtx.lua</span>
+              <span class="file-info">(42KB)</span>
+            </label>
+          </div>
+          <div class="file-option">
+            <label>
+              <input
+                type="radio"
+                name="fileType"
+                value="elf_loader.lua"
+                data-port="9026"
+              />
+              <span>elf_loader.lua</span>
+              <span class="file-info">(9.1KB)</span>
+            </label>
+          </div>
+          <div class="file-option">
+            <label>
+              <input
+                type="radio"
+                name="fileType"
+                value="ftp_server.lua"
+                data-port="9026"
+              />
+              <span>ftp_server.lua</span>
+              <span class="file-info">(29KB)</span>
+            </label>
+          </div>
+          <div class="file-option">
+            <label>
+              <input
+                type="radio"
+                name="fileType"
+                value="manual_lua"
+                data-port="9026"
+              />
+              <span>Custom Lua File</span>
+              <span class="file-info">Select your own .lua file</span>
+            </label>
+          </div>
+          <div class="manual-file-input" id="manualLuaInput">
+            <input type="file" id="luaFile" name="luaFile" accept=".lua" />
+            <div id="luaFileInfo" class="file-info" style="display: none">
+              Filename: <span id="luaFileName"></span><br />
+              Size: <span id="luaFileSize"></span> bytes
+            </div>
+          </div>
+
+          <h3>ELF (Port 9021)</h3>
+          <div class="file-option">
+            <label>
+              <input
+                type="radio"
+                name="fileType"
+                value="etaHEN.elf"
+                data-port="9021"
+              />
+              <span>etaHEN.elf</span>
+              <span class="file-info">(2.2MB)</span>
+            </label>
+          </div>
+          <div class="file-option">
+            <label>
+              <input
+                type="radio"
+                name="fileType"
+                value="websrv.elf"
+                data-port="9021"
+              />
+              <span>websrv.elf</span>
+              <span class="file-info">(689KB) - Web Server</span>
+            </label>
+          </div>
+          <div class="file-option">
+            <label>
+              <input
+                type="radio"
+                name="fileType"
+                value="ftps5.elf"
+                data-port="9021"
+              />
+              <span>ftps5.elf</span>
+              <span class="file-info">(26KB) - FTP Server</span>
+            </label>
+          </div>
+          <div class="file-option">
+            <label>
+              <input
+                type="radio"
+                name="fileType"
+                value="manual_elf"
+                data-port="9021"
+              />
+              <span>Custom ELF File</span>
+              <span class="file-info">Select your own .elf file</span>
+            </label>
+          </div>
+          <div class="manual-file-input" id="manualElfInput">
+            <input type="file" id="elfFile" name="elfFile" accept=".elf" />
+            <div id="elfFileInfo" class="file-info" style="display: none">
+              Filename: <span id="elfFileName"></span><br />
+              Size: <span id="elfFileSize"></span> bytes
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="sendButton">Send File</button>
+      </form>
+
+      <div id="status" style="display: none"></div>
+
+      <div class="tabs">
+        <div class="tab active" data-tab="user-log">Details</div>
+        <div class="tab" data-tab="technical-log">Log</div>
+      </div>
+
+      <div id="user-log" class="tab-content active">
+        <div class="log-container" id="log"></div>
+      </div>
+
+      <div id="technical-log" class="tab-content">
+        <div class="technical-log" id="techLog"></div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const luaForm = document.getElementById("luaForm");
+        const ipAddressInput = document.getElementById("ipAddress");
+        const portInput = document.getElementById("port");
+        const fileInput = document.getElementById("luaFile");
+        const fileInfoDiv = document.getElementById("fileInfo");
+        const fileNameSpan = document.getElementById("fileName");
+        const fileSizeSpan = document.getElementById("fileSize");
+        const statusDiv = document.getElementById("status");
+        const logDiv = document.getElementById("log");
+        const techLogDiv = document.getElementById("techLog");
+        const tabs = document.querySelectorAll(".tab");
+        const tabContents = document.querySelectorAll(".tab-content");
+
+        // SSE connection
+        let eventSource = null;
+
+        // Function to connect to SSE
+        function connectSSE() {
+          if (eventSource) {
+            eventSource.close();
+          }
+
+          eventSource = new EventSource("/events");
+
+          eventSource.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            switch (data.type) {
+              case "status":
+                log(data.message, "info");
+                techLog(data.message, "info");
+                break;
+
+              case "error":
+                log(data.message, "error");
+                techLog(data.message, "error");
+                showStatus(data.message, "error");
+                break;
+
+              case "success":
+                log(data.message, "success");
+                techLog(data.message, "success");
+                showStatus(data.message, "success");
+                break;
+
+              case "data":
+                // Format the data nicely
+                const hexData = data.hex.match(/.{1,2}/g).join(" ");
+                const truncatedHex =
+                  hexData.length > 100
+                    ? hexData.substring(0, 100) + "..."
+                    : hexData;
+
+                const strData = data.message.replace(/[^\x20-\x7E]/g, ".");
+                const truncatedStr =
+                  strData.length > 100
+                    ? strData.substring(0, 100) + "..."
+                    : strData;
+
+                log(`Received ${data.length} bytes from device`, "info");
+                techLog(`RECEIVED [HEX]: ${truncatedHex}`, "receive");
+                techLog(`RECEIVED [ASCII]: ${truncatedStr}`, "receive");
+                break;
+            }
+          };
+
+          eventSource.onerror = function (err) {
+            console.error("SSE Error:", err);
+            eventSource.close();
+          };
+        }
+
+        // Tab switching
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", function () {
+            // Remove active class from all tabs and contents
+            tabs.forEach((t) => t.classList.remove("active"));
+            tabContents.forEach((c) => c.classList.remove("active"));
+
+            // Add active class to clicked tab and corresponding content
+            this.classList.add("active");
+            const tabId = this.getAttribute("data-tab");
+            document.getElementById(tabId).classList.add("active");
+          });
+        });
+
+        // File info display
+        fileInput.addEventListener("change", function () {
+          const file = this.files[0];
+          if (file) {
+            fileNameSpan.textContent = file.name;
+            fileSizeSpan.textContent = file.size;
+            fileInfoDiv.style.display = "block";
+          } else {
+            fileInfoDiv.style.display = "none";
+          }
+        });
+
+        // File selection handling
+        const manualLuaInput = document.getElementById("manualLuaInput");
+        const manualElfInput = document.getElementById("manualElfInput");
+        const luaFileInput = document.getElementById("luaFile");
+        const elfFileInput = document.getElementById("elfFile");
+        const luaFileInfo = document.getElementById("luaFileInfo");
+        const elfFileInfo = document.getElementById("elfFileInfo");
+        const luaFileName = document.getElementById("luaFileName");
+        const luaFileSize = document.getElementById("luaFileSize");
+        const elfFileName = document.getElementById("elfFileName");
+        const elfFileSize = document.getElementById("elfFileSize");
+
+        // Function to clear all file inputs
+        function clearFileInputs() {
+          luaFileInput.value = "";
+          elfFileInput.value = "";
+          luaFileInfo.style.display = "none";
+          elfFileInfo.style.display = "none";
+        }
+
+        // Function to clear all radio selections
+        function clearRadioSelections() {
+          document
+            .querySelectorAll('input[name="fileType"]')
+            .forEach((radio) => {
+              radio.checked = false;
+            });
+        }
+
+        // Handle radio button changes
+        document.querySelectorAll('input[name="fileType"]').forEach((radio) => {
+          radio.addEventListener("change", function () {
+            // Clear any manual file selections
+            clearFileInputs();
+
+            // Hide all manual inputs
+            manualLuaInput.classList.remove("active");
+            manualElfInput.classList.remove("active");
+
+            // Show appropriate manual input
+            if (this.value === "manual_lua") {
+              manualLuaInput.classList.add("active");
+            } else if (this.value === "manual_elf") {
+              manualElfInput.classList.add("active");
+            }
+          });
+        });
+
+        // Handle manual file selection
+        luaFileInput.addEventListener("change", function () {
+          const file = this.files[0];
+          if (file) {
+            if (!file.name.endsWith(".lua")) {
+              showStatus("Please select a .lua file", "error");
+              this.value = "";
+              return;
+            }
+            // Clear any radio selections when manual file is selected
+            clearRadioSelections();
+            luaFileName.textContent = file.name;
+            luaFileSize.textContent = file.size;
+            luaFileInfo.style.display = "block";
+          } else {
+            luaFileInfo.style.display = "none";
+          }
+        });
+
+        elfFileInput.addEventListener("change", function () {
+          const file = this.files[0];
+          if (file) {
+            if (!file.name.endsWith(".elf")) {
+              showStatus("Please select a .elf file", "error");
+              this.value = "";
+              return;
+            }
+            // Clear any radio selections when manual file is selected
+            clearRadioSelections();
+            elfFileName.textContent = file.name;
+            elfFileSize.textContent = file.size;
+            elfFileInfo.style.display = "block";
+          } else {
+            elfFileInfo.style.display = "none";
+          }
+        });
+
+        // Log function for user-friendly logs
+        function log(message, type = "info") {
+          const timestamp = new Date().toLocaleTimeString();
+          const logEntry = document.createElement("div");
+
+          // Special handling for exploit output
+          if (message.includes("Response from device: umtx exploit")) {
+            const exploitOutput = document.createElement("pre");
+            exploitOutput.className = "exploit-output";
+
+            // Split the message into lines and format each line
+            const lines = message.split("\n");
+            lines.forEach((line) => {
+              const lineDiv = document.createElement("div");
+
+              if (
+                line.includes("exploit config:") ||
+                line.includes("thread config:")
+              ) {
+                lineDiv.className = "config";
+              } else if (
+                line.includes("successfully") ||
+                line.includes("achieved") ||
+                line.includes("done!")
+              ) {
+                lineDiv.className = "success";
+              } else if (
+                line.includes("== attempt #") ||
+                line.includes("race started")
+              ) {
+                lineDiv.className = "attempt";
+              } else if (line.includes("failed") || line.includes("retry")) {
+                lineDiv.className = "error";
+              }
+
+              lineDiv.textContent = line;
+              exploitOutput.appendChild(lineDiv);
+            });
+
+            logEntry.appendChild(exploitOutput);
+          } else {
+            logEntry.className = type;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+          }
+
+          logDiv.appendChild(logEntry);
+          logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // Log function for technical logs
+        function techLog(message, type = "info") {
+          const timestamp = new Date().toLocaleTimeString();
+          const logEntry = document.createElement("div");
+
+          // Special handling for exploit output
+          if (
+            message.includes("exploit config:") ||
+            message.includes("thread config:") ||
+            message.includes("== attempt #") ||
+            message.includes("we root now?") ||
+            message.includes("we escaped now?") ||
+            message.includes("debug menu enabled") ||
+            message.includes("exploit state is saved")
+          ) {
+            type = "exploit";
+          } else if (
+            message.includes("successfully") ||
+            message.includes("achieved") ||
+            message.includes("done!")
+          ) {
+            type = "success";
+          } else if (
+            message.includes("max_attempt") ||
+            message.includes("num_spray_fds") ||
+            message.includes("num_kprim_threads") ||
+            message.includes("max_race_attempt") ||
+            message.includes("core") ||
+            message.includes("prio")
+          ) {
+            type = "config";
+          }
+
+          logEntry.innerHTML = `<span class="timestamp">[${timestamp}]</span> <span class="${type}">${message}</span>`;
+          techLogDiv.appendChild(logEntry);
+          techLogDiv.scrollTop = techLogDiv.scrollHeight;
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+          statusDiv.textContent = message;
+          statusDiv.className = type;
+          statusDiv.style.display = "block";
+          setTimeout(() => {
+            statusDiv.style.display = "none";
+          }, 5000);
+        }
+
+        // Handle form submission
+        luaForm.addEventListener("submit", async function (e) {
+          e.preventDefault(); // Prevent default form submission
+
+          const ipAddress = ipAddressInput.value.trim();
+          const port = parseInt(portInput.value.trim(), 10);
+          const selectedFile = document.querySelector(
+            'input[name="fileType"]:checked'
+          );
+          const hasManualLuaFile = luaFileInput.files.length > 0;
+          const hasManualElfFile = elfFileInput.files.length > 0;
+
+          // Validate form inputs
+          if (!ipAddress) {
+            showStatus("Please enter an IP address", "error");
+            return;
+          }
+
+          // Validate file selection
+          if (!selectedFile && !hasManualLuaFile && !hasManualElfFile) {
+            showStatus("Please select a file to send", "error");
+            return;
+          }
+
+          // Ensure only one selection method is used
+          if (
+            (selectedFile && (hasManualLuaFile || hasManualElfFile)) ||
+            (hasManualLuaFile && hasManualElfFile)
+          ) {
+            showStatus("Please select only one file", "error");
+            return;
+          }
+
+          let filePort;
+          let fileName;
+          let fileData;
+
+          if (selectedFile) {
+            // Using predefined file
+            filePort = parseInt(selectedFile.getAttribute("data-port"), 10);
+            fileName = selectedFile.value;
+          } else if (hasManualLuaFile) {
+            // Using manual Lua file
+            filePort = 9026;
+            const file = luaFileInput.files[0];
+            fileName = file.name;
+            fileData = file;
+          } else if (hasManualElfFile) {
+            // Using manual ELF file
+            filePort = 9021;
+            const file = elfFileInput.files[0];
+            fileName = file.name;
+            fileData = file;
+          }
+
+          portInput.value = filePort;
+
+          // Connect to SSE before sending file
+          connectSSE();
+
+          log(`Preparing to send "${fileName}" to ${ipAddress}:${filePort}...`);
+          techLog(
+            `EXECUTE: Sending file "${fileName}" to ${ipAddress}:${filePort}`,
+            "info"
+          );
+
+          // Create FormData object and add form fields
+          const formData = new FormData();
+          if (fileData) {
+            formData.append("file", fileData);
+          } else {
+            formData.append("fileName", fileName);
+          }
+          formData.append("ipAddress", ipAddress);
+          formData.append("port", filePort);
+
+          try {
+            // Send the file using FormData
+            techLog(`Request: POST /send-lua (multipart/form-data)`, "info");
+            const response = await fetch("/send-lua", {
+              method: "POST",
+              body: formData,
+            });
+
+            const responseText = await response.text();
+            techLog(`Response received (${responseText.length} bytes)`, "info");
+
+            let result;
+            try {
+              // Try to parse as JSON
+              result = JSON.parse(responseText);
+
+              // Display technical logs if available
+              if (result.logs && Array.isArray(result.logs)) {
+                result.logs.forEach((logMsg) => {
+                  if (logMsg.includes("SENDING")) {
+                    techLog(logMsg, "send");
+                  } else if (logMsg.includes("RECEIVED")) {
+                    techLog(logMsg, "receive");
+                  } else if (
+                    logMsg.includes("Error") ||
+                    logMsg.includes("error")
+                  ) {
+                    techLog(logMsg, "error");
+                  } else {
+                    techLog(logMsg, "info");
+                  }
+                });
+              }
+            } catch (parseError) {
+              // If parsing fails, treat as plain text error
+              techLog(`Error parsing response: ${parseError.message}`, "error");
+              techLog(`Raw response: ${responseText}`, "info");
+              throw new Error(responseText || "Server error");
+            }
+
+            if (result.success) {
+              showStatus("File sent successfully!", "success");
+              log(
+                `✅ Successfully sent "${fileName}" to ${ipAddress}:${filePort}`
+              );
+
+              if (result.response) {
+                log(`Response from device: ${result.response}`);
+                techLog(`Device response: ${result.response}`, "receive");
+              }
+            } else {
+              showStatus(`Error: ${result.error}`, "error");
+              log(`❌ Error sending file: ${result.error}`, "error");
+              techLog(`Error: ${result.error}`, "error");
+            }
+          } catch (error) {
+            showStatus(`Error: ${error.message}`, "error");
+            log(`❌ Connection error: ${error.message}`, "error");
+            techLog(`Exception: ${error.message}`, "error");
+          }
+        });
+
+        // Initialize with a welcome message
+        log("Remote Lua Loader initialized. Ready to send files.");
+        techLog("Remote Lua Loader initialized. Ready to send files.", "info");
+      });
+
+      // Subtle electrical spark animation
+      (function () {
+        const canvas = document.getElementById("spark-canvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        const sparks = [];
+        const sparkColors = [
+          "rgba(124,184,255,", // blue
+          "rgba(0,255,255,", // cyan
+          "rgba(255,255,255,", // white
+          "rgba(80,180,255,", // electric blue
+          "rgba(0,180,255,", // deep blue
+        ];
+        function spawnSpark(burst = false) {
+          const x = Math.random() * width;
+          const y = Math.random() * height * 0.8 + height * 0.1;
+          const radius = burst ? 7 + Math.random() * 6 : 2 + Math.random() * 4;
+          const maxAlpha = burst
+            ? 0.7 + Math.random() * 0.2
+            : 0.4 + Math.random() * 0.4;
+          const color =
+            sparkColors[Math.floor(Math.random() * sparkColors.length)];
+          const duration = burst
+            ? 900 + Math.random() * 600
+            : 500 + Math.random() * 900;
+          const shadow = burst ? 32 : 10 + Math.random() * 10;
+          sparks.push({
+            x,
+            y,
+            radius,
+            alpha: 0,
+            maxAlpha,
+            t: 0,
+            duration,
+            color,
+            shadow,
+          });
+        }
+        function draw() {
+          ctx.clearRect(0, 0, width, height);
+          // Fade out old sparks
+          for (let i = sparks.length - 1; i >= 0; i--) {
+            const s = sparks[i];
+            s.t += 16;
+            // Fade in and out
+            if (s.t < s.duration / 3) {
+              s.alpha = s.maxAlpha * (s.t / (s.duration / 3));
+            } else if (s.t > (s.duration * 2) / 3) {
+              s.alpha =
+                s.maxAlpha *
+                (1 - (s.t - (s.duration * 2) / 3) / (s.duration / 3));
+            } else {
+              s.alpha = s.maxAlpha;
+            }
+            ctx.beginPath();
+            ctx.arc(
+              s.x,
+              s.y,
+              s.radius + Math.sin(s.t / 80) * 1.2,
+              0,
+              2 * Math.PI
+            );
+            ctx.shadowColor = s.color
+              .replace("rgba(", "rgba(")
+              .replace(",", ",1)");
+            ctx.shadowBlur = s.shadow;
+            ctx.fillStyle = s.color + s.alpha + ")";
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            if (s.t > s.duration) {
+              sparks.splice(i, 1);
+            }
+          }
+          // Occasionally spawn a new spark (increased frequency)
+          if (Math.random() < 0.13) {
+            spawnSpark();
+          }
+          // Rarely spawn a burst spark
+          if (Math.random() < 0.012) {
+            spawnSpark(true);
+          }
+          requestAnimationFrame(draw);
+        }
+        draw();
+        window.addEventListener("resize", () => {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          canvas.width = width;
+          canvas.height = height;
+        });
+      })();
+
+      // Function to scan network
+      async function scanNetwork() {
+        const scanButton = document.getElementById("scanNetwork");
+        const scanStatus = document.getElementById("scanStatus");
+        const ps5Devices = document.getElementById("ps5Devices");
+        const availableIPs = document.getElementById("availableIPs");
+        const ipAddressInput = document.getElementById("ipAddress");
+
+        // Reset state
+        scanButton.disabled = true;
+        scanButton.textContent = "Scanning...";
+        scanStatus.className = "scan-status scanning";
+        scanStatus.textContent = "Scanning network for PS5 devices...";
+        scanStatus.style.display = "block";
+        ps5Devices.style.display = "none";
+        availableIPs.innerHTML =
+          '<option value="">Select a PS5 running Remote Lua Loader</option>';
+        ipAddressInput.value = ""; // Clear the IP address input
+
+        try {
+          const response = await fetch("/scan-network");
+          const data = await response.json();
+
+          if (data.error) {
+            scanStatus.className = "scan-status error";
+            scanStatus.textContent = `Error: ${data.error}`;
+            return;
+          }
+
+          if (data.activeHosts.length === 0) {
+            scanStatus.className = "scan-status error";
+            scanStatus.textContent = "No PS5 devices found on the network";
+            return;
+          }
+
+          // Add PS5 devices to dropdown
+          data.activeHosts.forEach((host) => {
+            const option = document.createElement("option");
+            option.value = host.ip;
+            option.textContent = `PS5 (${host.ip})`;
+            availableIPs.appendChild(option);
+          });
+
+          scanStatus.className = "scan-status success";
+          scanStatus.textContent = `Found ${data.activeHosts.length} PS5(s)`;
+          ps5Devices.style.display = "block";
+        } catch (error) {
+          console.error("Error scanning network:", error);
+          scanStatus.className = "scan-status error";
+          scanStatus.textContent = "Failed to scan network";
+        } finally {
+          // Reset button state
+          scanButton.disabled = false;
+          scanButton.textContent = "Scan Network";
+        }
+      }
+
+      // Add event listeners
+      document.addEventListener("DOMContentLoaded", () => {
+        const scanButton = document.getElementById("scanNetwork");
+        scanButton.addEventListener("click", scanNetwork);
+
+        const availableIPs = document.getElementById("availableIPs");
+        availableIPs.addEventListener("change", (e) => {
+          const selectedIP = e.target.value;
+          if (selectedIP) {
+            document.getElementById("ipAddress").value = selectedIP;
+          }
+        });
+      });
+    </script>
+    <p id="bacedgod">
+      Thank you,
+      <a href="https://github.com/bacedgod" style="color: white">bacedgod</a>
+    </p>
+  </body>
+</html>
