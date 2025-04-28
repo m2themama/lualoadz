@@ -1,4 +1,4 @@
-# lualoadz
+# LuaLoadz
 
 A self-hosted LUA and ELF sender for a receiving PS5 running the remote-lua-loader. This tool provides a web interface for sending Lua files and ELF binaries to your PS5 with detailed logging capabilities. I made this to make my workflow better when Jailbreaking my 7.61 PS5. I'm not sure whether it works on other firmwares that have capabilities of using the remote-lua-loader exploit. 
 
@@ -6,7 +6,7 @@ I have the latest umtx and elf_loader lua files from [Remote Lua Loader](https:/
 
 The included ELF files are from [ps5-payload-dev](https://github.com/ps5-payload-dev), thanks to John Tornblom.
 
-etaHEN is 2.1b (not yet released), thanks to [LightningMods](https://github.com/LightningMods)
+The included etaHEN is 2.1b (not yet released, so expect bugs), thanks to [LightningMods](https://github.com/LightningMods)
 
 ## Features
 
