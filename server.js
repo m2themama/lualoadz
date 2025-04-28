@@ -463,9 +463,9 @@ app.post('/send-lua', upload.single('file'), (req, res) => {
       sendSSE({ type: 'status', message: `File size: ${fileSize} bytes` });
       
       // For ELF files, send the raw data directly
-      if (fileName.endsWith('.elf')) {
-        logs.push('Sending ELF file data directly...');
-        sendSSE({ type: 'status', message: 'Sending ELF file data directly...' });
+      if (fileName.endsWith('.elf') || fileName.endsWith('.bin')) {
+        logs.push('Sending binary file data directly...');
+        sendSSE({ type: 'status', message: 'Sending binary file data directly...' });
         
         client.write(data, (err) => {
           if (err) {
@@ -480,11 +480,11 @@ app.post('/send-lua', upload.single('file'), (req, res) => {
             });
           }
           
-          console.log('ELF file sent successfully');
-          logs.push(`ELF file sent successfully (${data.length} bytes)`);
-          sendSSE({ type: 'status', message: `ELF file sent successfully (${data.length} bytes)` });
+          console.log('Binary file sent successfully');
+          logs.push(`Binary file sent successfully (${data.length} bytes)`);
+          sendSSE({ type: 'status', message: `Binary file sent successfully (${data.length} bytes)` });
           
-          // For ELF files, we can close the connection after sending
+          // For binary files, we can close the connection after sending
           client.end();
         });
       } else {

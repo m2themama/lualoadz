@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="90" cy="90" r="85" fill="#10131A" stroke="#0050D8" stroke-width="2"/>
+  
+  <!-- Circuit board pattern -->
+  <path d="M45 45 L45 75 M45 105 L45 135" stroke="#7CB8FF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M135 45 L135 75 M135 105 L135 135" stroke="#7CB8FF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M45 45 L75 45 M105 45 L135 45" stroke="#7CB8FF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M45 135 L75 135 M105 135 L135 135" stroke="#7CB8FF" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Circuit nodes -->
+  <circle cx="45" cy="45" r="3" fill="#7CB8FF"/>
+  <circle cx="45" cy="75" r="3" fill="#7CB8FF"/>
+  <circle cx="45" cy="105" r="3" fill="#7CB8FF"/>
+  <circle cx="45" cy="135" r="3" fill="#7CB8FF"/>
+  <circle cx="75" cy="45" r="3" fill="#7CB8FF"/>
+  <circle cx="75" cy="135" r="3" fill="#7CB8FF"/>
+  <circle cx="105" cy="45" r="3" fill="#7CB8FF"/>
+  <circle cx="105" cy="135" r="3" fill="#7CB8FF"/>
+  <circle cx="135" cy="45" r="3" fill="#7CB8FF"/>
+  <circle cx="135" cy="75" r="3" fill="#7CB8FF"/>
+  <circle cx="135" cy="105" r="3" fill="#7CB8FF"/>
+  <circle cx="135" cy="135" r="3" fill="#7CB8FF"/>
+  
+  <!-- Stylized L -->
+  <path d="M60 60 L60 120 L120 120" stroke="#0050D8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M60 60 L60 120 L120 120" stroke="#7CB8FF" stroke-width="6" stroke-linecap="round"/>
+  
+  <!-- Glow effect -->
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+    <feMerge>
+      <feMergeNode in="coloredBlur"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+</svg> 

@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LuaLoadz</title>
+    <!-- Favicon links -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap"
       rel="stylesheet"
@@ -70,7 +76,17 @@
         margin-bottom: 2rem;
       }
 
+      .logo {
+        width: 48px;
+        height: 48px;
+        margin-right: 1rem;
+        vertical-align: middle;
+      }
+
       .header h1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 2.2rem;
         font-family: "Orbitron", "Inter", sans-serif;
         font-weight: 700;
@@ -501,7 +517,10 @@
     />
     <div class="container">
       <div class="header">
-        <h1>LuaLoadz</h1>
+        <h1>
+          <img src="/favicon.svg" alt="LuaLoadz Logo" class="logo">
+          LuaLoadz
+        </h1>
         <p>
           Use this tool to send your LUA files to a compatible PS5 running the
           <a href="https://github.com/shahrilnet/remote_lua_loader">
@@ -604,16 +623,16 @@
             </div>
           </div>
 
-          <h3>ELF (Port 9021)</h3>
+          <h3>ELF/BIN (Port 9021)</h3>
           <div class="file-option">
             <label>
               <input
                 type="radio"
                 name="fileType"
-                value="etaHEN.elf"
+                value="etaHEN.bin"
                 data-port="9021"
               />
-              <span>etaHEN.elf</span>
+              <span>etaHEN.bin</span>
               <span class="file-info">(2.2MB)</span>
             </label>
           </div>
@@ -649,12 +668,12 @@
                 value="manual_elf"
                 data-port="9021"
               />
-              <span>Custom ELF File</span>
-              <span class="file-info">Select your own .elf file</span>
+              <span>Custom ELF/BIN File</span>
+              <span class="file-info">Select your own .elf or .bin file</span>
             </label>
           </div>
           <div class="manual-file-input" id="manualElfInput">
-            <input type="file" id="elfFile" name="elfFile" accept=".elf" />
+            <input type="file" id="elfFile" name="elfFile" accept=".elf,.bin" />
             <div id="elfFileInfo" class="file-info" style="display: none">
               Filename: <span id="elfFileName"></span><br />
               Size: <span id="elfFileSize"></span> bytes
@@ -851,8 +870,8 @@
         elfFileInput.addEventListener("change", function () {
           const file = this.files[0];
           if (file) {
-            if (!file.name.endsWith(".elf")) {
-              showStatus("Please select a .elf file", "error");
+            if (!file.name.endsWith(".elf") && !file.name.endsWith(".bin")) {
+              showStatus("Please select a .elf or .bin file", "error");
               this.value = "";
               return;
             }

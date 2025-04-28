@@ -1,12 +1,12 @@
 # LuaLoadz
 
-A self-hosted LUA and ELF sender for a receiving PS5 running the [remote-lua-loader](https://github.com/shahrilnet/remote_lua_loader). This tool provides a web interface for sending Lua files and ELF binaries to your PS5 with detailed logging capabilities. I made this to make my workflow better when Jailbreaking my 7.61 PS5. I'm not sure whether it works on other firmwares that have capabilities of using the remote-lua-loader exploit. 
+A self-hosted LUA and ELF/BIN sender for a receiving PS5 running the [remote-lua-loader](https://github.com/shahrilnet/remote_lua_loader). This tool provides a web interface for sending Lua files and ELF/BIN binaries to your PS5 with detailed logging capabilities. I made this to make my workflow better when Jailbreaking my 7.61 PS5. I'm not sure whether it works on other firmwares that have capabilities of using the remote-lua-loader exploit. 
 
 I have the latest umtx and elf_loader lua files from [Remote Lua Loader](https://github.com/shahrilnet/remote_lua_loader) but you also have the ability to manually add other lua/elf files as well. You can replace the files in the `/payloads` directory in the project to have them available to send if you wish to go that route as well. 
 
 The included ELF files are from [ps5-payload-dev](https://github.com/ps5-payload-dev), thanks to John Tornblom.
 
-The included etaHEN is 2.1b (not yet released, so expect bugs), thanks to [LightningMods](https://github.com/LightningMods)
+The included [etaHEN](https://github.com/etaHEN/etaHEN/releases/tag/2.1B) is 2.1b, thanks to [LightningMods](https://github.com/LightningMods)
 
 ## Features
 
@@ -22,6 +22,7 @@ The included etaHEN is 2.1b (not yet released, so expect bugs), thanks to [Light
 - Node.js 18 or higher
 - npm (comes with Node.js)
 - Docker (optional, for containerized deployment)
+- PS5 running the remote lua loader
 
 ## Installation
 
@@ -43,7 +44,7 @@ npm install
 npm start
 ```
 
-The server will start on port 3000 by default. Access the web interface at `http://localhost:3000`.
+The server will start on port 3000 by default. Access the web interface at `http://localhost:3000` and begin sending files from there.
 
 ### Docker Installation
 
