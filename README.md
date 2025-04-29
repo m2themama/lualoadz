@@ -30,7 +30,7 @@ The included [etaHEN](https://github.com/etaHEN/etaHEN) is 2.1b thanks to [Light
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/lualoadz.git
+git clone https://github.com/bacedgod/lualoadz.git
 cd lualoadz
 ```
 
@@ -69,7 +69,7 @@ docker run --network host bacedgod/lualoadz
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/lualoadz.git
+git clone https://github.com/bacedgod/lualoadz.git
 cd lualoadz
 ```
 
