@@ -391,6 +391,17 @@
             });
         }
 
+        // Function to clear all form selections
+        function clearFormSelections() {
+          clearFileInputs();
+          clearRadioSelections();
+          document.getElementById('pkg-file').value = "";
+          document.getElementById('pkg-url').value = "";
+          document.getElementById('pkg-progress').style.display = "none";
+          document.getElementById('pkg-progress-bar').style.width = "0%";
+          document.getElementById('pkg-progress-info').textContent = "0%";
+        }
+
         // Handle radio button changes
         document.querySelectorAll('input[name="fileType"]').forEach((radio) => {
           radio.addEventListener("change", function () {
@@ -678,6 +689,9 @@
                 log(`Response from device: ${result.response}`);
                 techLog(`Device response: ${result.response}`, "receive");
               }
+              
+              // Clear form selections after successful submission
+              clearFormSelections();
             } else {
               showStatus(`Error: ${result.error}`, "error");
               log(`❌ Error sending file: ${result.error}`, "error");
@@ -801,6 +815,9 @@
                 log(`Response from device: ${result.response}`);
                 techLog(`Device response: ${result.response}`, "receive");
               }
+              
+              // Clear form selections after successful submission
+              clearFormSelections();
             } else {
               showStatus(`Error: ${result.error}`, "error");
               log(`❌ Error sending file: ${result.error}`, "error");
@@ -887,13 +904,8 @@
                   resultDiv.innerHTML = '<div class="success-box"><h3 class="success">Installation Started!</h3>' + 
                                        '<p class="success">' + response.response + '</p></div>';
                   
-                  // Clear form fields
-                  fileInput.value = "";
-                  urlInput.value = "";
-                  
-                  // Reset progress bar
-                  progressBar.style.width = "0%";
-                  progressInfo.textContent = "0%";
+                  // Clear form selections after successful submission
+                  clearFormSelections();
                 } else {
                   resultDiv.innerHTML = '<div class="error-box"><h3 class="error">Installation Failed!</h3>' + 
                                        '<p class="error">' + response.error + '</p></div>';
