@@ -8,9 +8,14 @@ const dns = require('dns');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const execAsync = promisify(exec);
+const FormData = require('form-data');
+const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Add JSON body parser middleware
+app.use(express.json());
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -249,8 +254,8 @@ app.get('/scan-network', async (req, res) => {
   }
 });
 
-// Handle file uploads and sending to target device
-app.post('/send-lua', upload.single('file'), (req, res) => {
+// Handle Lua file uploads
+app.post("/send-lua", upload.single("file"), async (req, res) => {
   console.log('Received request to /send-lua');
   console.log('Request body:', req.body);
   console.log('Request file:', req.file);
@@ -552,6 +557,413 @@ app.post('/send-lua', upload.single('file'), (req, res) => {
       }
     });
   });
+});
+
+// Handle ELF/BIN file uploads
+app.post("/send-elf", upload.single("file"), async (req, res) => {
+  console.log('Received request to /send-elf');
+  console.log('Request body:', req.body);
+  console.log('Request file:', req.file);
+
+  // Check if we have all required fields
+  if (!req.body.ipAddress || !req.body.port) {
+    console.error('Missing required fields:', { 
+      ipAddress: req.body.ipAddress, 
+      port: req.body.port 
+    });
+    return res.status(400).json({ 
+      success: false, 
+      error: 'Missing required fields (IP address or port)',
+      logs: ['Missing required fields (IP address or port)']
+    });
+  }
+
+  const ipAddress = req.body.ipAddress;
+  const port = parseInt(req.body.port, 10);
+  let fileName;
+  let filePath;
+
+  // Determine file source (uploaded or predefined)
+  if (req.file) {
+    // Using uploaded file
+    fileName = req.file.originalname;
+    filePath = req.file.path;
+  } else if (req.body.fileName) {
+    // Using predefined file
+    fileName = req.body.fileName;
+    filePath = path.join(__dirname, 'payloads', fileName);
+    
+    // Verify predefined file exists
+    if (!fs.existsSync(filePath)) {
+      return res.status(400).json({ 
+        success: false, 
+        error: `Predefined file ${fileName} not found`,
+        logs: [`Predefined file ${fileName} not found`]
+      });
+    }
+  } else {
+    return res.status(400).json({ 
+      success: false, 
+      error: 'No file specified (neither uploaded nor predefined)',
+      logs: ['No file specified (neither uploaded nor predefined)']
+    });
+  }
+  
+  // Initialize logs array to capture all events
+  const logs = [];
+  logs.push(`Starting process for file: ${fileName}`);
+  logs.push(`Target: ${ipAddress}:${port}`);
+
+  // Send initial status via SSE
+  sendSSE({ type: 'status', message: `Starting process for file: ${fileName}` });
+
+  console.log(`Sending ${fileName} to ${ipAddress}:${port}`);
+
+  // Read the file
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      console.error('Error reading file:', err);
+      logs.push(`Error reading file: ${err.message}`);
+      sendSSE({ type: 'error', message: `Error reading file: ${err.message}` });
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Error reading file',
+        logs 
+      });
+    }
+
+    logs.push(`File read successfully, content size: ${data.length} bytes`);
+    sendSSE({ type: 'status', message: `File read successfully, content size: ${data.length} bytes` });
+
+    logs.push(`Attempting to connect to ${ipAddress}:${port}...`);
+    sendSSE({ type: 'status', message: `Attempting to connect to ${ipAddress}:${port}...` });
+
+    // Create a TCP client and connect to the target device
+    const client = new net.Socket();
+    let responseData = '';
+    
+    // Set a timeout for the connection
+    client.setTimeout(30000); // 30 seconds
+    logs.push('Connection timeout set to 30000ms');
+    sendSSE({ type: 'status', message: 'Connection timeout set to 30000ms' });
+    
+    // Handle connection errors
+    client.on('error', (err) => {
+      console.error('Connection error:', err);
+      logs.push(`Connection error: ${err.message}`);
+      logs.push(`Error code: ${err.code}`);
+      logs.push(`Error stack: ${err.stack}`);
+      sendSSE({ type: 'error', message: `Connection error: ${err.message}` });
+      if (req.file) {
+        // Clean up the uploaded file
+        fs.unlink(filePath, () => {
+          logs.push('Temporary file deleted');
+        });
+      }
+      if (!res.headersSent) {
+        return res.status(500).json({ 
+          success: false, 
+          error: err.message,
+          logs 
+        });
+      }
+    });
+    
+    // Handle connection timeout
+    client.on('timeout', () => {
+      console.log('Connection timed out');
+      logs.push('Connection timed out');
+      sendSSE({ type: 'status', message: 'Connection timed out' });
+      
+      logs.push('Current connection state:', client.readyState);
+      client.destroy();
+      
+      if (req.file) {
+        // Clean up the uploaded file
+        fs.unlink(filePath, () => {
+          logs.push('Temporary file deleted');
+        });
+      }
+      
+      if (!res.headersSent) {
+        return res.json({ 
+          success: true, 
+          response: 'File sent successfully',
+          logs 
+        });
+      }
+    });
+    
+    // Log raw buffer data as hex
+    function logBuffer(buffer, prefix) {
+      const hexData = buffer.toString('hex').match(/.{1,2}/g).join(' ');
+      const truncatedHex = hexData.length > 100 
+        ? hexData.substring(0, 100) + '...' 
+        : hexData;
+      logs.push(`${prefix} [HEX]: ${truncatedHex}`);
+      
+      // Try to log as string if it's printable
+      const strData = buffer.toString().replace(/[^\x20-\x7E]/g, '.');
+      const truncatedStr = strData.length > 100 
+        ? strData.substring(0, 100) + '...' 
+        : strData;
+      logs.push(`${prefix} [ASCII]: ${truncatedStr}`);
+    }
+    
+    // Handle data received from the device
+    client.on('data', (chunk) => {
+      responseData += chunk.toString();
+      console.log('Received data from device:', chunk.toString());
+      logs.push(`Received data from device (${chunk.length} bytes)`);
+      logBuffer(chunk, 'RECEIVED');
+      
+      // Send real-time data via SSE
+      sendSSE({ 
+        type: 'data', 
+        message: chunk.toString(),
+        hex: chunk.toString('hex'),
+        length: chunk.length
+      });
+    });
+    
+    // Handle connection close
+    client.on('close', () => {
+      console.log('Connection closed');
+      logs.push('Connection closed');
+      sendSSE({ type: 'status', message: 'Connection closed' });
+      
+      if (req.file) {
+        // Clean up the uploaded file
+        fs.unlink(filePath, () => {
+          logs.push('Temporary file deleted');
+        });
+      }
+      
+      // Only send response if it hasn't been sent yet
+      if (!res.headersSent) {
+        res.json({ 
+          success: true, 
+          response: responseData,
+          logs 
+        });
+      }
+    });
+    
+    // Connect to the target device
+    client.connect(port, ipAddress, () => {
+      console.log('Connected to device');
+      logs.push(`Successfully connected to ${ipAddress}:${port}`);
+      sendSSE({ type: 'status', message: `Successfully connected to ${ipAddress}:${port}` });
+      
+      // Get the raw file data
+      const fileSize = data.length;
+      logs.push(`File size: ${fileSize} bytes`);
+      sendSSE({ type: 'status', message: `File size: ${fileSize} bytes` });
+      
+      // Send the file data directly
+      logs.push('Sending binary file data directly...');
+      sendSSE({ type: 'status', message: 'Sending binary file data directly...' });
+      
+      client.write(data, (err) => {
+        if (err) {
+          console.error('Error sending file data:', err);
+          logs.push(`Error sending file data: ${err.message}`);
+          sendSSE({ type: 'error', message: `Error sending file data: ${err.message}` });
+          client.destroy();
+          return res.status(500).json({ 
+            success: false, 
+            error: err.message,
+            logs 
+          });
+        }
+        
+        console.log('Binary file sent successfully');
+        logs.push(`Binary file sent successfully (${data.length} bytes)`);
+        sendSSE({ type: 'status', message: `Binary file sent successfully (${data.length} bytes)` });
+        
+        // Close the connection after sending
+        client.end();
+      });
+    });
+  });
+});
+
+// Handle PKG file uploads for etaHEN
+app.post('/upload', upload.single('file'), async (req, res) => {
+  console.log('Received request to /upload');
+  console.log('Request body:', req.body);
+  console.log('Request file:', req.file);
+
+  // Check if we have all required fields
+  if (!req.body.ipAddress) {
+    console.error('Missing required fields:', { 
+      ipAddress: req.body.ipAddress
+    });
+    return res.status(400).json({ 
+      success: false, 
+      error: 'Missing required fields (IP address)',
+      logs: ['Missing required fields (IP address)']
+    });
+  }
+
+  const ipAddress = req.body.ipAddress;
+  const port = 12800; // etaHEN port
+  let fileName;
+  let filePath;
+
+  // Determine file source (uploaded or URL)
+  if (req.file) {
+    // Using uploaded file
+    fileName = req.file.originalname;
+    filePath = req.file.path;
+  } else if (req.body.url) {
+    // Using URL
+    fileName = req.body.url.split('/').pop();
+    filePath = req.body.url;
+  } else {
+    return res.status(400).json({ 
+      success: false, 
+      error: 'No file specified (neither uploaded nor URL)',
+      logs: ['No file specified (neither uploaded nor URL)']
+    });
+  }
+
+  // Initialize logs array to capture all events
+  const logs = [];
+  logs.push(`Starting PKG installation process for: ${fileName}`);
+  logs.push(`Target: ${ipAddress}:${port}`);
+
+  // Send initial status via SSE
+  sendSSE({ type: 'status', message: `Starting PKG installation process for: ${fileName}` });
+
+  try {
+    // Create a new FormData object for the PS5 request
+    const form = new FormData();
+    
+    if (req.file) {
+      // For uploaded files, append the file stream
+      form.append('file', fs.createReadStream(filePath), {
+        filename: fileName,
+        contentType: 'application/octet-stream'
+      });
+    } else {
+      // For URLs, send the URL
+      form.append('url', filePath);
+    }
+
+    // Make the request to the PS5
+    const response = await fetch(`http://${ipAddress}:${port}/upload`, {
+      method: 'POST',
+      body: form,
+      headers: {
+        'Origin': `http://${ipAddress}:${port}`,
+        'Referer': `http://${ipAddress}:${port}/`,
+        ...form.getHeaders()
+      }
+    });
+
+    const responseText = await response.text();
+    console.log('PS5 response:', responseText);
+    logs.push(`PS5 response: ${responseText}`);
+
+    // Clean up the uploaded file if it exists
+    if (req.file) {
+      fs.unlink(filePath, () => {
+        logs.push('Temporary file deleted');
+      });
+    }
+
+    // Send success response
+    return res.json({
+      success: true,
+      response: responseText,
+      logs
+    });
+
+  } catch (error) {
+    console.error('Error sending to PS5:', error);
+    logs.push(`Error: ${error.message}`);
+    sendSSE({ type: 'error', message: `Error: ${error.message}` });
+
+    // Clean up the uploaded file if it exists
+    if (req.file) {
+      fs.unlink(filePath, () => {
+        logs.push('Temporary file deleted');
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      logs
+    });
+  }
+});
+
+// Handle clearing temporary files on PS5
+app.post('/clear-tmp', async (req, res) => {
+  console.log('Received request to clear temporary files');
+  console.log('Request body:', req.body);
+
+  // Check if we have all required fields
+  if (!req.body.ipAddress || !req.body.port) {
+    console.error('Missing required fields:', { 
+      ipAddress: req.body.ipAddress, 
+      port: req.body.port 
+    });
+    return res.status(400).json({ 
+      success: false, 
+      error: 'Missing required fields (IP address or port)',
+      logs: ['Missing required fields (IP address or port)']
+    });
+  }
+
+  const ipAddress = req.body.ipAddress;
+  const port = parseInt(req.body.port, 10);
+
+  // Initialize logs array to capture all events
+  const logs = [];
+  logs.push(`Starting clear temporary files process`);
+  logs.push(`Target: ${ipAddress}:${port}`);
+
+  // Send initial status via SSE
+  sendSSE({ type: 'status', message: `Starting clear temporary files process` });
+
+  try {
+    // Make the request to the PS5
+    const response = await fetch(`http://${ipAddress}:${port}/cleartmp`, {
+      method: 'POST',
+      headers: {
+        'Origin': `http://${ipAddress}:${port}`,
+        'Referer': `http://${ipAddress}:${port}/`
+      }
+    });
+
+    const responseText = await response.text();
+    console.log('PS5 response:', responseText);
+    logs.push(`PS5 response: ${responseText}`);
+
+    // Check if the response indicates success
+    const success = responseText.includes('SUCCESS:');
+    
+    // Send response
+    return res.json({
+      success: success,
+      response: responseText,
+      logs
+    });
+
+  } catch (error) {
+    console.error('Error clearing temporary files:', error);
+    logs.push(`Error: ${error.message}`);
+    sendSSE({ type: 'error', message: `Error: ${error.message}` });
+
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      logs
+    });
+  }
 });
 
 // Start the server
