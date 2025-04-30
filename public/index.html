@@ -1092,7 +1092,7 @@
         scanStatus.style.display = "block";
         ps5Devices.style.display = "none";
         availableIPs.innerHTML =
-          '<option value="">Select a PS5 running Remote Lua Loader</option>';
+          '<option value="">Select a PS5</option>';
         ipAddressInput.value = ""; // Clear the IP address input
 
         try {
@@ -1115,12 +1115,47 @@
           data.activeHosts.forEach((host) => {
             const option = document.createElement("option");
             option.value = host.ip;
-            option.textContent = `PS5 (${host.ip})`;
+            
+            // Create port descriptions
+            const portNames = {
+              9026: 'Remote Lua Loader',
+              9021: 'ELF Loader',
+              1337: 'FTP',
+              9081: 'Klog',
+              12800: 'DPIV2'
+            };
+            
+            const portsText = host.ports.map(port => {
+              return `${port} (${portNames[port] || 'Unknown'})`;
+            }).join(', ');
+            
+            option.textContent = `PS5 (${host.ip}) - ${portsText}`;
             availableIPs.appendChild(option);
           });
 
+          // Update scan status with port information
+          const portCounts = {};
+          data.activeHosts.forEach(host => {
+            host.ports.forEach(port => {
+              portCounts[port] = (portCounts[port] || 0) + 1;
+            });
+          });
+
+          const portStatus = Object.entries(portCounts)
+            .map(([port, count]) => {
+              const portName = {
+                9026: 'Remote Lua Loader',
+                9021: 'ELF Loader',
+                1337: 'FTP',
+                9081: 'Klog',
+                12800: 'DPIV2'
+              }[port] || 'Unknown';
+              return `${count} with ${portName} (${port})`;
+            })
+            .join(', ');
+
           scanStatus.className = "scan-status success";
-          scanStatus.textContent = `Found ${data.activeHosts.length} PS5(s)`;
+          scanStatus.textContent = `Found ${data.activeHosts.length} PS5(s) with advertised ports: ${portStatus}`;
           ps5Devices.style.display = "block";
         } catch (error) {
           console.error("Error scanning network:", error);
@@ -1146,6 +1181,56 @@
           }
         });
       });
+
+      // Function to handle scan results
+      function handleScanResults(data) {
+        const resultArea = document.getElementById('scanResult');
+        const detailsArea = document.getElementById('detailsContent');
+        const logArea = document.getElementById('logContent');
+        
+        if (data.error) {
+          resultArea.textContent = `Error: ${data.error}`;
+          log('Error scanning network: ' + data.error, 'error');
+          return;
+        }
+        
+        const localIPs = data.localIPs;
+        const activeHosts = data.activeHosts;
+        
+        // Display local IPs
+        let localIPsText = 'Local IPs:\n';
+        localIPs.forEach(ip => {
+          localIPsText += `- ${ip.interface}: ${ip.ip} (${ip.netmask})\n`;
+        });
+        
+        // Display active PS5s with their ports
+        let activeHostsText = '';
+        if (activeHosts.length > 0) {
+          activeHostsText = `Found ${activeHosts.length} PS5(s):\n`;
+          activeHosts.forEach(host => {
+            const portsText = host.ports.map(port => {
+              const portNames = {
+                9026: 'Remote Lua Loader',
+                9021: 'ELF Loader',
+                1337: 'FTP',
+                9081: 'Klog',
+                12800: 'DPIV2'
+              };
+              return `${port} (${portNames[port] || 'Unknown'})`;
+            }).join(', ');
+            activeHostsText += `- ${host.ip} - Open ports: ${portsText}\n`;
+          });
+        } else {
+          activeHostsText = 'No PS5s found on the network.';
+        }
+        
+        resultArea.textContent = localIPsText + '\n' + activeHostsText;
+        
+        // Log the results
+        log('Network scan completed', 'info');
+        log(localIPsText, 'info');
+        log(activeHostsText, 'info');
+      }
     </script>
     <p id="bacedgod">
       Thank you,

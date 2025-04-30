@@ -156,14 +156,27 @@ async function scanIPBatch(ips, ports) {
   const results = await Promise.all(
     ips.map(async (ip) => {
       try {
-        // Try port 9026 first (most common PS5 port)
-        const isPS5 = await checkPort(ip, 9026);
-        if (isPS5) {
-          // If 9026 is open, check 9021 quickly
-          const has9021 = await checkPort(ip, 9021);
+        // Check all PS5-related ports
+        const portChecks = await Promise.all([
+          checkPort(ip, 9026), // remote lua loader
+          checkPort(ip, 9021), // elf loader
+          checkPort(ip, 1337), // ftp
+          checkPort(ip, 9081), // klog
+          checkPort(ip, 12800) // dpiv2
+        ]);
+
+        // If any port is open, it's likely a PS5
+        const openPorts = [];
+        if (portChecks[0]) openPorts.push(9026);
+        if (portChecks[1]) openPorts.push(9021);
+        if (portChecks[2]) openPorts.push(1337);
+        if (portChecks[3]) openPorts.push(9081);
+        if (portChecks[4]) openPorts.push(12800);
+
+        if (openPorts.length > 0) {
           return {
             ip,
-            ports: has9021 ? [9026, 9021] : [9026]
+            ports: openPorts
           };
         }
       } catch (err) {
@@ -761,8 +774,8 @@ app.post("/send-elf", upload.single("file"), async (req, res) => {
       sendSSE({ type: 'status', message: `File size: ${fileSize} bytes` });
       
       // Send the file data directly
-      logs.push('Sending binary file data directly...');
-      sendSSE({ type: 'status', message: 'Sending binary file data directly...' });
+      logs.push('Sending binary file data...');
+      sendSSE({ type: 'status', message: 'Sending binary file data...' });
       
       client.write(data, (err) => {
         if (err) {
