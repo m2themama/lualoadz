@@ -2,11 +2,11 @@
 
 A self-hosted LUA, ELF/BIN and PKG (using DPIv2 from etaHEN) sender for a receiving PS5 running the [remote-lua-loader](https://github.com/shahrilnet/remote_lua_loader). 
 
-This tool provides a web interface for sending Lua, ELF/BIN binaries, and pakacge files all in one to your PS5 with detailed logging capabilities. 
+This tool provides a web interface for sending Lua, ELF/BIN binaries, and package files to your PS5.
 
 I made this to make my workflow better when Jailbreaking my 7.61 PS5. I'm not sure whether it works on other firmwares that have capabilities of using the remote-lua-loader exploit, test it out! 
 
-I have the latest umtx and elf_loader lua files from [Remote Lua Loader](https://github.com/shahrilnet/remote_lua_loader) but you also have the ability to manually add other lua/elf/bin/pkg files as well. You can replace the lua/elf/bin files in the `/payloads` directory in the project to have them available to send if you wish to go that route as well. 
+I have the latest umtx and elf_loader lua files from [Remote Lua Loader](https://github.com/shahrilnet/remote_lua_loader) but you also have the ability to manually add other lua/elf/bin/pkg files as well. You can replace the lua/elf/bin files in the `/payloads` directory in the project to have them available to send without uploading if you wish to go that route as well. 
 
 The included ELF files are from [ps5-payload-dev](https://github.com/ps5-payload-dev), thanks to John Tornblom.
 
