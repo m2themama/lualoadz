@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LuaLoadz</title>
     <!-- Favicon links -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <canvas id="spark-canvas"></canvas>
@@ -26,11 +26,15 @@
     <div class="container">
       <div class="header">
         <h1>
-          <img src="/favicon.svg" alt="LuaLoadz Logo" class="logo">
+          <img src="/favicon.svg" alt="LuaLoadz Logo" class="logo" />
           LuaLoadz
         </h1>
         <p>
-          Use this tool to send files to your PS5 running the <a href="https://github.com/shahrilnet/remote_lua_loader">remote-lua-loader</a>. First, find your PS5 on the network or enter it's IP address and port, then select the type of file you want to send.
+          Use this tool to send files to your PS5 running the
+          <a href="https://github.com/shahrilnet/remote_lua_loader"
+            >remote-lua-loader</a
+          >. First, find your PS5 on the network or enter it's IP address and
+          port, then select the type of file you want to send.
         </p>
       </div>
 
@@ -93,18 +97,30 @@
                 <span class="file-info">(29KB)</span>
               </label>
             </div>
-            <div class="file-option">
-              <label>
-                <input type="radio" name="fileType" value="manual_lua" />
-                <span>Custom Lua File</span>
-                <span class="file-info">Select your own .lua file</span>
-              </label>
-            </div>
-            <div class="manual-file-input" id="manualLuaInput">
-              <input type="file" id="luaFile" name="luaFile" accept=".lua" />
-              <div id="luaFileInfo" class="file-info" style="display: none">
-                Filename: <span id="luaFileName"></span><br />
-                Size: <span id="luaFileSize"></span> bytes
+            <h3 style="text-align: center">or</h3>
+            <div class="file-upload-container" id="lua-upload-container">
+              <div class="file-upload-area" id="lua-upload-area">
+                <input
+                  type="file"
+                  id="luaFile"
+                  name="luaFile"
+                  accept=".lua"
+                  class="file-input"
+                />
+                <div class="upload-placeholder">
+                  <svg class="upload-icon" viewBox="0 0 24 24">
+                    <path
+                      d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
+                    />
+                  </svg>
+
+                  <p class="upload-text">Drag & drop your LUA file here</p>
+                  <p class="upload-subtext">or click to browse</p>
+                </div>
+                <div class="file-info" id="luaFileInfo" style="display: none">
+                  <span id="luaFileName"></span><br />
+                  <span id="luaFileSize"></span> bytes
+                </div>
               </div>
             </div>
           </div>
@@ -138,18 +154,29 @@
                 <span class="file-info">(26KB) - FTP Server</span>
               </label>
             </div>
-            <div class="file-option">
-              <label>
-                <input type="radio" name="fileType" value="manual_elf" />
-                <span>Custom ELF/BIN File</span>
-                <span class="file-info">Select your own .elf or .bin file</span>
-              </label>
-            </div>
-            <div class="manual-file-input" id="manualElfInput">
-              <input type="file" id="elfFile" name="elfFile" accept=".elf,.bin" />
-              <div id="elfFileInfo" class="file-info" style="display: none">
-                Filename: <span id="elfFileName"></span><br />
-                Size: <span id="elfFileSize"></span> bytes
+            <h3 style="text-align: center">or</h3>
+            <div class="file-upload-container" id="elf-upload-container">
+              <div class="file-upload-area" id="elf-upload-area">
+                <input
+                  type="file"
+                  id="elfFile"
+                  name="elfFile"
+                  accept=".elf,.bin"
+                  class="file-input"
+                />
+                <div class="upload-placeholder">
+                  <svg class="upload-icon" viewBox="0 0 24 24">
+                    <path
+                      d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
+                    />
+                  </svg>
+                  <p class="upload-text">Drag & drop your ELF/BIN file here</p>
+                  <p class="upload-subtext">or click to browse</p>
+                </div>
+                <div class="file-info" id="elfFileInfo" style="display: none">
+                  <span id="elfFileName"></span><br />
+                  <span id="elfFileSize"></span> bytes
+                </div>
               </div>
             </div>
           </div>
@@ -162,22 +189,61 @@
         <form id="pkgForm" enctype="multipart/form-data">
           <div class="form-group">
             <label for="pkg-file">Upload PKG File:</label>
-            <input type="file" id="pkg-file" name="file" accept=".pkg" class="form-control">
+            <div class="file-upload-container" id="pkg-upload-container">
+              <div class="file-upload-area" id="pkg-upload-area">
+                <input
+                  type="file"
+                  id="pkg-file"
+                  name="file"
+                  accept=".pkg"
+                  class="file-input"
+                />
+                <div class="upload-placeholder">
+                  <svg class="upload-icon" viewBox="0 0 24 24">
+                    <path
+                      d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
+                    />
+                  </svg>
+                  <p class="upload-text">Drag & drop your PKG file here</p>
+                  <p class="upload-subtext">or click to browse</p>
+                </div>
+                <div class="file-info" id="pkg-file-info" style="display: none">
+                  <p class="file-name" id="pkg-file-name"></p>
+                  <p class="file-size" id="pkg-file-size"></p>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="or-divider">
-            <span>OR</span>
+            <h3 style="text-align: center">or</h3>
           </div>
           <div class="form-group">
-            <label for="pkg-url">PKG URL:</label>
-            <input type="text" id="pkg-url" name="url" placeholder="http://example.com/game.pkg" class="form-control">
+            <label for="pkg-url">Enter your PKG URL:</label>
+            <input
+              type="text"
+              id="pkg-url"
+              name="url"
+              placeholder="http://example.com/game.pkg"
+              class="form-control"
+            />
           </div>
-          <div class="button-group" style="display: flex; gap: 10px;">
+          <div class="button-group" style="display: flex; gap: 10px">
             <button type="submit" id="install-pkg">Install PKG</button>
-            <button type="button" id="clear-tmp" class="btn-secondary">Clear Temporary Files</button>
+            <button type="button" id="clear-tmp" class="btn-secondary">
+              Clear Temporary Files
+            </button>
           </div>
-          <div class="progress-container" id="pkg-progress" style="display: none;">
+          <div
+            class="progress-container"
+            id="pkg-progress"
+            style="display: none"
+          >
             <div class="progress">
-              <div class="progress-bar" id="pkg-progress-bar" style="width: 0%;"></div>
+              <div
+                class="progress-bar"
+                id="pkg-progress-bar"
+                style="width: 0%"
+              ></div>
             </div>
             <div class="progress-info" id="pkg-progress-info">0%</div>
           </div>
@@ -254,7 +320,7 @@
                 if (data.message && data.message.trim()) {
                   log(data.message, "info");
                 }
-                
+
                 // For technical logs, show both hex and ASCII
                 const hexData = data.hex.match(/.{1,2}/g).join(" ");
                 const truncatedHex =
@@ -281,9 +347,9 @@
         }
 
         // Main tab switching
-        const mainTabs = document.querySelectorAll('.main-tab');
-        const mainTabContents = document.querySelectorAll('.main-tab-content');
-        
+        const mainTabs = document.querySelectorAll(".main-tab");
+        const mainTabContents = document.querySelectorAll(".main-tab-content");
+
         mainTabs.forEach((tab) => {
           tab.addEventListener("click", function () {
             // Remove active class from all main tabs and contents
@@ -296,25 +362,25 @@
             document.getElementById(tabId).classList.add("active");
 
             // Update port based on selected tab
-            const portInput = document.getElementById('port');
-            switch(tabId) {
-              case 'lua-tab':
-                portInput.value = '9026';
+            const portInput = document.getElementById("port");
+            switch (tabId) {
+              case "lua-tab":
+                portInput.value = "9026";
                 break;
-              case 'elf-tab':
-                portInput.value = '9021';
+              case "elf-tab":
+                portInput.value = "9021";
                 break;
-              case 'pkg-tab':
-                portInput.value = '12800';
+              case "pkg-tab":
+                portInput.value = "12800";
                 break;
             }
           });
         });
 
         // Log tab switching
-        const logTabs = document.querySelectorAll('.log-tab');
-        const logTabContents = document.querySelectorAll('.log-tab-content');
-        
+        const logTabs = document.querySelectorAll(".log-tab");
+        const logTabContents = document.querySelectorAll(".log-tab-content");
+
         logTabs.forEach((tab) => {
           tab.addEventListener("click", function () {
             // Remove active class from all log tabs and contents
@@ -329,26 +395,28 @@
         });
 
         // Update port when PS5 is selected from network scan
-        document.getElementById('availableIPs').addEventListener('change', function(e) {
-          const selectedIP = e.target.value;
-          if (selectedIP) {
-            document.getElementById('ipAddress').value = selectedIP;
-            // Keep the current port based on the active tab
-            const activeTab = document.querySelector('.main-tab.active');
-            const portInput = document.getElementById('port');
-            switch(activeTab.getAttribute('data-tab')) {
-              case 'lua-tab':
-                portInput.value = '9026';
-                break;
-              case 'elf-tab':
-                portInput.value = '9021';
-                break;
-              case 'pkg-tab':
-                portInput.value = '12800';
-                break;
+        document
+          .getElementById("availableIPs")
+          .addEventListener("change", function (e) {
+            const selectedIP = e.target.value;
+            if (selectedIP) {
+              document.getElementById("ipAddress").value = selectedIP;
+              // Keep the current port based on the active tab
+              const activeTab = document.querySelector(".main-tab.active");
+              const portInput = document.getElementById("port");
+              switch (activeTab.getAttribute("data-tab")) {
+                case "lua-tab":
+                  portInput.value = "9026";
+                  break;
+                case "elf-tab":
+                  portInput.value = "9021";
+                  break;
+                case "pkg-tab":
+                  portInput.value = "12800";
+                  break;
+              }
             }
-          }
-        });
+          });
 
         // File info display
         fileInput.addEventListener("change", function () {
@@ -365,14 +433,8 @@
         // File selection handling
         const manualLuaInput = document.getElementById("manualLuaInput");
         const manualElfInput = document.getElementById("manualElfInput");
-        const luaFileInput = document.getElementById("luaFile");
-        const elfFileInput = document.getElementById("elfFile");
-        const luaFileInfo = document.getElementById("luaFileInfo");
-        const elfFileInfo = document.getElementById("elfFileInfo");
-        const luaFileName = document.getElementById("luaFileName");
-        const luaFileSize = document.getElementById("luaFileSize");
-        const elfFileName = document.getElementById("elfFileName");
-        const elfFileSize = document.getElementById("elfFileSize");
+        // The following variables are already declared and will be reused:
+        // luaFileInput, elfFileInput, luaFileInfo, elfFileInfo, luaFileName, luaFileSize, elfFileName, elfFileSize
 
         // Function to clear all file inputs
         function clearFileInputs() {
@@ -395,11 +457,11 @@
         function clearFormSelections() {
           clearFileInputs();
           clearRadioSelections();
-          document.getElementById('pkg-file').value = "";
-          document.getElementById('pkg-url').value = "";
-          document.getElementById('pkg-progress').style.display = "none";
-          document.getElementById('pkg-progress-bar').style.width = "0%";
-          document.getElementById('pkg-progress-info').textContent = "0%";
+          document.getElementById("pkg-file").value = "";
+          document.getElementById("pkg-url").value = "";
+          document.getElementById("pkg-progress").style.display = "none";
+          document.getElementById("pkg-progress-bar").style.width = "0%";
+          document.getElementById("pkg-progress-info").textContent = "0%";
         }
 
         // Handle radio button changes
@@ -500,7 +562,9 @@
             logEntry.appendChild(exploitOutput);
           } else if (message.includes("Received data from device:")) {
             // Extract the actual message content
-            const content = message.replace("Received data from device:", "").trim();
+            const content = message
+              .replace("Received data from device:", "")
+              .trim();
             if (content) {
               logEntry.className = "device-message";
               logEntry.textContent = `[${timestamp}] ${content}`;
@@ -681,15 +745,13 @@
 
             if (result.success) {
               showStatus("File sent successfully!", "success");
-              log(
-                `✅ Successfully sent "${fileName}" to ${ipAddress}:${port}`
-              );
+              log(`✅ Successfully sent "${fileName}" to ${ipAddress}:${port}`);
 
               if (result.response) {
                 log(`Response from device: ${result.response}`);
                 techLog(`Device response: ${result.response}`, "receive");
               }
-              
+
               // Clear form selections after successful submission
               clearFormSelections();
             } else {
@@ -807,15 +869,13 @@
 
             if (result.success) {
               showStatus("File sent successfully!", "success");
-              log(
-                `✅ Successfully sent "${fileName}" to ${ipAddress}:${port}`
-              );
+              log(`✅ Successfully sent "${fileName}" to ${ipAddress}:${port}`);
 
               if (result.response) {
                 log(`Response from device: ${result.response}`);
                 techLog(`Device response: ${result.response}`, "receive");
               }
-              
+
               // Clear form selections after successful submission
               clearFormSelections();
             } else {
@@ -829,6 +889,93 @@
             techLog(`Exception: ${error.message}`, "error");
           }
         });
+
+        // Handle PKG file upload
+        const pkgUploadArea = document.getElementById("pkg-upload-area");
+        const pkgFileInput = document.getElementById("pkg-file");
+        const pkgFileInfo = document.getElementById("pkg-file-info");
+        const pkgFileName = document.getElementById("pkg-file-name");
+        const pkgFileSize = document.getElementById("pkg-file-size");
+
+        // Prevent default drag behaviors
+        ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+          pkgUploadArea.addEventListener(eventName, preventDefaults, false);
+          document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        // Highlight drop zone when item is dragged over it
+        ["dragenter", "dragover"].forEach((eventName) => {
+          pkgUploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ["dragleave", "drop"].forEach((eventName) => {
+          pkgUploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        // Handle dropped files
+        pkgUploadArea.addEventListener("drop", handleDrop, false);
+
+        // Handle click to upload
+        pkgUploadArea.addEventListener("click", () => {
+          pkgFileInput.click();
+        });
+
+        // Handle file selection
+        pkgFileInput.addEventListener("change", handleFileSelect);
+
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+
+        function highlight(e) {
+          pkgUploadArea.classList.add("highlight");
+        }
+
+        function unhighlight(e) {
+          pkgUploadArea.classList.remove("highlight");
+        }
+
+        function handleDrop(e) {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+          const files = e.target.files;
+          handleFiles(files);
+        }
+
+        function handleFiles(files) {
+          if (files.length > 0) {
+            const file = files[0];
+            if (file.name.endsWith(".pkg")) {
+              // Set the file input's files property using a DataTransfer
+              const dataTransfer = new DataTransfer();
+              dataTransfer.items.add(file);
+              pkgFileInput.files = dataTransfer.files;
+
+              pkgFileName.textContent = file.name;
+              pkgFileSize.textContent = formatFileSize(file.size);
+              pkgFileInfo.style.display = "block";
+              pkgUploadArea.classList.add("has-file");
+            } else {
+              showStatus("Please select a .pkg file", "error");
+              pkgFileInput.value = "";
+            }
+          }
+        }
+
+        function formatFileSize(bytes) {
+          if (bytes === 0) return "0 Bytes";
+          const k = 1024;
+          const sizes = ["Bytes", "KB", "MB", "GB"];
+          const i = Math.floor(Math.log(bytes) / Math.log(k));
+          return (
+            parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+          );
+        }
 
         // Handle PKG form submission
         const pkgForm = document.getElementById("pkgForm");
@@ -857,8 +1004,9 @@
 
           // Check if either file or URL is provided
           if (fileInput.files.length === 0 && urlInput.value.trim() === "") {
-            resultDiv.innerHTML = '<div class="error-box"><h3 class="error">Validation Error</h3>' +
-                                 '<p class="error">Please either select a PKG file to upload or enter a URL.</p></div>';
+            resultDiv.innerHTML =
+              '<div class="error-box"><h3 class="error">Validation Error</h3>' +
+              '<p class="error">Please either select a PKG file to upload or enter a URL.</p></div>';
             return;
           }
 
@@ -888,8 +1036,8 @@
             // Send the file using FormData
             techLog(`Request: POST /upload (multipart/form-data)`, "info");
             const xhr = new XMLHttpRequest();
-            
-            xhr.upload.addEventListener("progress", function(e) {
+
+            xhr.upload.addEventListener("progress", function (e) {
               if (e.lengthComputable) {
                 const percentComplete = (e.loaded / e.total) * 100;
                 progressBar.style.width = percentComplete + "%";
@@ -897,29 +1045,39 @@
               }
             });
 
-            xhr.onload = function() {
+            xhr.onload = function () {
               if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 if (response.success) {
-                  resultDiv.innerHTML = '<div class="success-box"><h3 class="success">Installation Started!</h3>' + 
-                                       '<p class="success">' + response.response + '</p></div>';
-                  
+                  resultDiv.innerHTML =
+                    '<div class="success-box"><h3 class="success">Installation Started!</h3>' +
+                    '<p class="success">' +
+                    response.response +
+                    "</p></div>";
+
                   // Clear form selections after successful submission
                   clearFormSelections();
                 } else {
-                  resultDiv.innerHTML = '<div class="error-box"><h3 class="error">Installation Failed!</h3>' + 
-                                       '<p class="error">' + response.error + '</p></div>';
+                  resultDiv.innerHTML =
+                    '<div class="error-box"><h3 class="error">Installation Failed!</h3>' +
+                    '<p class="error">' +
+                    response.error +
+                    "</p></div>";
                 }
               } else {
-                resultDiv.innerHTML = '<div class="error-box"><h3 class="error">Error!</h3>' + 
-                                     '<p class="error">Status: ' + xhr.status + '</p></div>';
+                resultDiv.innerHTML =
+                  '<div class="error-box"><h3 class="error">Error!</h3>' +
+                  '<p class="error">Status: ' +
+                  xhr.status +
+                  "</p></div>";
               }
               progressContainer.style.display = "none";
             };
 
-            xhr.onerror = function() {
-              resultDiv.innerHTML = '<div class="error-box"><h3 class="error">Connection Error!</h3>' + 
-                                   '<p class="error">Failed to connect to the server.</p></div>';
+            xhr.onerror = function () {
+              resultDiv.innerHTML =
+                '<div class="error-box"><h3 class="error">Connection Error!</h3>' +
+                '<p class="error">Failed to connect to the server.</p></div>';
               progressContainer.style.display = "none";
             };
 
@@ -933,63 +1091,180 @@
         });
 
         // Handle Clear Temporary Files button click
-        document.getElementById("clear-tmp").addEventListener("click", async function() {
-          const ipAddress = ipAddressInput.value.trim();
-          const port = parseInt(portInput.value.trim(), 10);
-          const resultDiv = document.getElementById("pkg-result");
+        document
+          .getElementById("clear-tmp")
+          .addEventListener("click", async function () {
+            const ipAddress = ipAddressInput.value.trim();
+            const port = parseInt(portInput.value.trim(), 10);
+            const resultDiv = document.getElementById("pkg-result");
 
-          // Validate form inputs
-          if (!ipAddress) {
-            showStatus("Please enter an IP address", "error");
-            return;
-          }
-
-          if (isNaN(port) || port < 0 || port > 65535) {
-            showStatus("Please enter a valid port number (0-65535)", "error");
-            return;
-          }
-
-          log(`Clearing temporary files on ${ipAddress}:${port}...`);
-          techLog(`EXECUTE: Clearing temporary files on ${ipAddress}:${port}`, "info");
-
-          try {
-            // Send request to our server
-            const response = await fetch('/clear-tmp', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                ipAddress: ipAddress,
-                port: port
-              })
-            });
-
-            if (!response.ok) {
-              throw new Error(`Server returned ${response.status}`);
+            // Validate form inputs
+            if (!ipAddress) {
+              showStatus("Please enter an IP address", "error");
+              return;
             }
 
-            const result = await response.json();
-            
-            if (result.success) {
-              resultDiv.innerHTML = `<div class="success-box"><h3 class="success">Success!</h3><p class="success">${result.response}</p></div>`;
-              log(`✅ ${result.response}`);
-              techLog(`Response: ${result.response}`, "success");
-            } else {
-              resultDiv.innerHTML = `<div class="error-box"><h3 class="error">Error!</h3><p class="error">${result.response}</p></div>`;
-              log(`❌ ${result.response}`, "error");
-              techLog(`Error: ${result.response}`, "error");
+            if (isNaN(port) || port < 0 || port > 65535) {
+              showStatus("Please enter a valid port number (0-65535)", "error");
+              return;
             }
-          } catch (error) {
-            resultDiv.innerHTML = `<div class="error-box"><h3 class="error">Connection Error!</h3><p class="error">Failed to connect to the server: ${error.message}</p></div>`;
-            log(`❌ Connection error: ${error.message}`, "error");
-            techLog(`Exception: ${error.message}`, "error");
-          }
-        });
+
+            log(`Clearing temporary files on ${ipAddress}:${port}...`);
+            techLog(
+              `EXECUTE: Clearing temporary files on ${ipAddress}:${port}`,
+              "info"
+            );
+
+            try {
+              // Send request to our server
+              const response = await fetch("/clear-tmp", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  ipAddress: ipAddress,
+                  port: port,
+                }),
+              });
+
+              if (!response.ok) {
+                throw new Error(`Server returned ${response.status}`);
+              }
+
+              const result = await response.json();
+
+              if (result.success) {
+                resultDiv.innerHTML = `<div class="success-box"><h3 class="success">Success!</h3><p class="success">${result.response}</p></div>`;
+                log(`✅ ${result.response}`);
+                techLog(`Response: ${result.response}`, "success");
+              } else {
+                resultDiv.innerHTML = `<div class="error-box"><h3 class="error">Error!</h3><p class="error">${result.response}</p></div>`;
+                log(`❌ ${result.response}`, "error");
+                techLog(`Error: ${result.response}`, "error");
+              }
+            } catch (error) {
+              resultDiv.innerHTML = `<div class="error-box"><h3 class="error">Connection Error!</h3><p class="error">Failed to connect to the server: ${error.message}</p></div>`;
+              log(`❌ Connection error: ${error.message}`, "error");
+              techLog(`Exception: ${error.message}`, "error");
+            }
+          });
 
         // Initialize with a welcome message
         log("Remote Lua Loader initialized. Ready to send files.");
         techLog("Remote Lua Loader initialized. Ready to send files.", "info");
+
+        // Handle LUA file upload (drag-and-drop and click)
+        const luaUploadArea = document.getElementById("lua-upload-area");
+        const luaFileInput = document.getElementById("luaFile");
+        const luaFileInfo = document.getElementById("luaFileInfo");
+        const luaFileName = document.getElementById("luaFileName");
+        const luaFileSize = document.getElementById("luaFileSize");
+
+        ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+          luaUploadArea.addEventListener(eventName, preventDefaults, false);
+          document.body.addEventListener(eventName, preventDefaults, false);
+        });
+        ["dragenter", "dragover"].forEach((eventName) => {
+          luaUploadArea.addEventListener(eventName, highlightLua, false);
+        });
+        ["dragleave", "drop"].forEach((eventName) => {
+          luaUploadArea.addEventListener(eventName, unhighlightLua, false);
+        });
+        luaUploadArea.addEventListener("drop", handleLuaDrop, false);
+        luaUploadArea.addEventListener("click", () => {
+          luaFileInput.click();
+        });
+        luaFileInput.addEventListener("change", handleLuaFileSelect);
+
+        function highlightLua(e) {
+          luaUploadArea.classList.add("highlight");
+        }
+        function unhighlightLua(e) {
+          luaUploadArea.classList.remove("highlight");
+        }
+        function handleLuaDrop(e) {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          handleLuaFiles(files);
+        }
+        function handleLuaFileSelect(e) {
+          const files = e.target.files;
+          handleLuaFiles(files);
+        }
+        function handleLuaFiles(files) {
+          if (files.length > 0) {
+            const file = files[0];
+            if (file.name.endsWith(".lua")) {
+              const dataTransfer = new DataTransfer();
+              dataTransfer.items.add(file);
+              luaFileInput.files = dataTransfer.files;
+              luaFileName.textContent = file.name;
+              luaFileSize.textContent = formatFileSize(file.size);
+              luaFileInfo.style.display = "block";
+              luaUploadArea.classList.add("has-file");
+            } else {
+              showStatus("Please select a .lua file", "error");
+              luaFileInput.value = "";
+            }
+          }
+        }
+
+        // Handle ELF file upload (drag-and-drop and click)
+        const elfUploadArea = document.getElementById("elf-upload-area");
+        const elfFileInput = document.getElementById("elfFile");
+        const elfFileInfo = document.getElementById("elfFileInfo");
+        const elfFileName = document.getElementById("elfFileName");
+        const elfFileSize = document.getElementById("elfFileSize");
+
+        ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+          elfUploadArea.addEventListener(eventName, preventDefaults, false);
+          document.body.addEventListener(eventName, preventDefaults, false);
+        });
+        ["dragenter", "dragover"].forEach((eventName) => {
+          elfUploadArea.addEventListener(eventName, highlightElf, false);
+        });
+        ["dragleave", "drop"].forEach((eventName) => {
+          elfUploadArea.addEventListener(eventName, unhighlightElf, false);
+        });
+        elfUploadArea.addEventListener("drop", handleElfDrop, false);
+        elfUploadArea.addEventListener("click", () => {
+          elfFileInput.click();
+        });
+        elfFileInput.addEventListener("change", handleElfFileSelect);
+
+        function highlightElf(e) {
+          elfUploadArea.classList.add("highlight");
+        }
+        function unhighlightElf(e) {
+          elfUploadArea.classList.remove("highlight");
+        }
+        function handleElfDrop(e) {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          handleElfFiles(files);
+        }
+        function handleElfFileSelect(e) {
+          const files = e.target.files;
+          handleElfFiles(files);
+        }
+        function handleElfFiles(files) {
+          if (files.length > 0) {
+            const file = files[0];
+            if (file.name.endsWith(".elf") || file.name.endsWith(".bin")) {
+              const dataTransfer = new DataTransfer();
+              dataTransfer.items.add(file);
+              elfFileInput.files = dataTransfer.files;
+              elfFileName.textContent = file.name;
+              elfFileSize.textContent = formatFileSize(file.size);
+              elfFileInfo.style.display = "block";
+              elfUploadArea.classList.add("has-file");
+            } else {
+              showStatus("Please select a .elf or .bin file", "error");
+              elfFileInput.value = "";
+            }
+          }
+        }
       });
 
       // Subtle electrical spark animation
@@ -1103,8 +1378,7 @@
         scanStatus.textContent = "Scanning network for PS5 devices...";
         scanStatus.style.display = "block";
         ps5Devices.style.display = "none";
-        availableIPs.innerHTML =
-          '<option value="">Select a PS5</option>';
+        availableIPs.innerHTML = '<option value="">Select a PS5</option>';
         ipAddressInput.value = ""; // Clear the IP address input
 
         try {
@@ -1127,44 +1401,47 @@
           data.activeHosts.forEach((host) => {
             const option = document.createElement("option");
             option.value = host.ip;
-            
+
             // Create port descriptions
             const portNames = {
-              9026: 'Remote Lua Loader',
-              9021: 'ELF Loader',
-              1337: 'FTP',
-              9081: 'Klog',
-              12800: 'DPIV2'
+              9026: "Remote Lua Loader",
+              9021: "ELF Loader",
+              1337: "FTP",
+              9081: "Klog",
+              12800: "DPIV2",
             };
-            
-            const portsText = host.ports.map(port => {
-              return `${port} (${portNames[port] || 'Unknown'})`;
-            }).join(', ');
-            
+
+            const portsText = host.ports
+              .map((port) => {
+                return `${port} (${portNames[port] || "Unknown"})`;
+              })
+              .join(", ");
+
             option.textContent = `PS5 (${host.ip}) - ${portsText}`;
             availableIPs.appendChild(option);
           });
 
           // Update scan status with port information
           const portCounts = {};
-          data.activeHosts.forEach(host => {
-            host.ports.forEach(port => {
+          data.activeHosts.forEach((host) => {
+            host.ports.forEach((port) => {
               portCounts[port] = (portCounts[port] || 0) + 1;
             });
           });
 
           const portStatus = Object.entries(portCounts)
             .map(([port, count]) => {
-              const portName = {
-                9026: 'Remote Lua Loader',
-                9021: 'ELF Loader',
-                1337: 'FTP',
-                9081: 'Klog',
-                12800: 'DPIV2'
-              }[port] || 'Unknown';
+              const portName =
+                {
+                  9026: "Remote Lua Loader",
+                  9021: "ELF Loader",
+                  1337: "FTP",
+                  9081: "Klog",
+                  12800: "DPIV2",
+                }[port] || "Unknown";
               return `${count} with ${portName} (${port})`;
             })
-            .join(', ');
+            .join(", ");
 
           scanStatus.className = "scan-status success";
           scanStatus.textContent = `Found ${data.activeHosts.length} PS5(s) with advertised ports: ${portStatus}`;
@@ -1196,52 +1473,54 @@
 
       // Function to handle scan results
       function handleScanResults(data) {
-        const resultArea = document.getElementById('scanResult');
-        const detailsArea = document.getElementById('detailsContent');
-        const logArea = document.getElementById('logContent');
-        
+        const resultArea = document.getElementById("scanResult");
+        const detailsArea = document.getElementById("detailsContent");
+        const logArea = document.getElementById("logContent");
+
         if (data.error) {
           resultArea.textContent = `Error: ${data.error}`;
-          log('Error scanning network: ' + data.error, 'error');
+          log("Error scanning network: " + data.error, "error");
           return;
         }
-        
+
         const localIPs = data.localIPs;
         const activeHosts = data.activeHosts;
-        
+
         // Display local IPs
-        let localIPsText = 'Local IPs:\n';
-        localIPs.forEach(ip => {
+        let localIPsText = "Local IPs:\n";
+        localIPs.forEach((ip) => {
           localIPsText += `- ${ip.interface}: ${ip.ip} (${ip.netmask})\n`;
         });
-        
+
         // Display active PS5s with their ports
-        let activeHostsText = '';
+        let activeHostsText = "";
         if (activeHosts.length > 0) {
           activeHostsText = `Found ${activeHosts.length} PS5(s):\n`;
-          activeHosts.forEach(host => {
-            const portsText = host.ports.map(port => {
-              const portNames = {
-                9026: 'Remote Lua Loader',
-                9021: 'ELF Loader',
-                1337: 'FTP',
-                9081: 'Klog',
-                12800: 'DPIV2'
-              };
-              return `${port} (${portNames[port] || 'Unknown'})`;
-            }).join(', ');
+          activeHosts.forEach((host) => {
+            const portsText = host.ports
+              .map((port) => {
+                const portNames = {
+                  9026: "Remote Lua Loader",
+                  9021: "ELF Loader",
+                  1337: "FTP",
+                  9081: "Klog",
+                  12800: "DPIV2",
+                };
+                return `${port} (${portNames[port] || "Unknown"})`;
+              })
+              .join(", ");
             activeHostsText += `- ${host.ip} - Open ports: ${portsText}\n`;
           });
         } else {
-          activeHostsText = 'No PS5s found on the network.';
+          activeHostsText = "No PS5s found on the network.";
         }
-        
-        resultArea.textContent = localIPsText + '\n' + activeHostsText;
-        
+
+        resultArea.textContent = localIPsText + "\n" + activeHostsText;
+
         // Log the results
-        log('Network scan completed', 'info');
-        log(localIPsText, 'info');
-        log(activeHostsText, 'info');
+        log("Network scan completed", "info");
+        log(localIPsText, "info");
+        log(activeHostsText, "info");
       }
     </script>
     <p id="bacedgod">
