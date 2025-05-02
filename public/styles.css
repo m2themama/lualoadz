@@ -506,6 +506,13 @@ button:hover {
   margin-bottom: 1.5rem;
 }
 
+#jailbreak-section {
+  background-color: var(--surface-light);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
 @media (min-width: 640px) {
   body {
     padding: 2rem;
@@ -535,4 +542,46 @@ button:hover {
   .technical-log {
     height: 400px;
   }
+}
+
+.jailbreak-controls {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.jailbreak-controls .btn-danger {
+  background-color: #dc3545;
+  color: white;
+  padding: 12px 24px;
+  font-size: 1.2em;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.jailbreak-controls .btn-danger:hover {
+  background-color: #c82333;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.checkbox-wrapper label {
+  color: #fff;
+  cursor: pointer;
 } 

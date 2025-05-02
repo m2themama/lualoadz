@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LuaLoadz</title>
     <!-- Favicon links -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <canvas id="spark-canvas"></canvas>
@@ -26,14 +26,34 @@
     <div class="container">
       <div class="header">
         <h1>
-          <img src="/favicon.svg" alt="LuaLoadz Logo" class="logo">
+          <img src="/favicon.svg" alt="LuaLoadz Logo" class="logo" />
           LuaLoadz
         </h1>
         <p>
-          Use this tool to send files to your PS5 running the <a href="https://github.com/shahrilnet/remote_lua_loader">remote-lua-loader</a>. First, find your PS5 on the network or enter it's IP address and port, then select the type of file you want to send.
+          Use this tool to send files to your PS5 running the
+          <a href="https://github.com/shahrilnet/remote_lua_loader"
+            >remote-lua-loader</a
+          >. First, find your PS5 on the network or enter it's IP address and
+          port, then select the type of file you want to send.
         </p>
       </div>
-
+      <div class="section" id="jailbreak-section">
+        <h2>Automatic Jailbreak</h2>
+        <p>
+          Finds your PS5 running the remote lua loader on port 9026, sends umtx,
+          then sends the elf_loader. Optionally, you can also send etaHEN as a
+          last payload in the process.
+        </p>
+        <div class="jailbreak-controls">
+          <button id="jailbreakButton" class="btn btn-danger">
+            Jailbreak!
+          </button>
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="sendEtaHEN" name="sendEtaHEN" />
+            <label for="sendEtaHEN">Send with etaHEN</label>
+          </div>
+        </div>
+      </div>
       <!-- Network Scan Section -->
       <div class="section" id="network-scan-section">
         <h2>Find Your PS5</h2>
@@ -43,6 +63,7 @@
               Scan Network
             </button>
           </div>
+
           <div id="scanStatus" class="scan-status"></div>
           <div id="ps5Devices" class="ps5-devices" style="display: none">
             <select id="availableIPs" class="form-control">
@@ -146,7 +167,12 @@
               </label>
             </div>
             <div class="manual-file-input" id="manualElfInput">
-              <input type="file" id="elfFile" name="elfFile" accept=".elf,.bin" />
+              <input
+                type="file"
+                id="elfFile"
+                name="elfFile"
+                accept=".elf,.bin"
+              />
               <div id="elfFileInfo" class="file-info" style="display: none">
                 Filename: <span id="elfFileName"></span><br />
                 Size: <span id="elfFileSize"></span> bytes
@@ -162,22 +188,44 @@
         <form id="pkgForm" enctype="multipart/form-data">
           <div class="form-group">
             <label for="pkg-file">Upload PKG File:</label>
-            <input type="file" id="pkg-file" name="file" accept=".pkg" class="form-control">
+            <input
+              type="file"
+              id="pkg-file"
+              name="file"
+              accept=".pkg"
+              class="form-control"
+            />
           </div>
           <div class="or-divider">
             <span>OR</span>
           </div>
           <div class="form-group">
             <label for="pkg-url">PKG URL:</label>
-            <input type="text" id="pkg-url" name="url" placeholder="http://example.com/game.pkg" class="form-control">
+            <input
+              type="text"
+              id="pkg-url"
+              name="url"
+              placeholder="http://example.com/game.pkg"
+              class="form-control"
+            />
           </div>
-          <div class="button-group" style="display: flex; gap: 10px;">
+          <div class="button-group" style="display: flex; gap: 10px">
             <button type="submit" id="install-pkg">Install PKG</button>
-            <button type="button" id="clear-tmp" class="btn-secondary">Clear Temporary Files</button>
+            <button type="button" id="clear-tmp" class="btn-secondary">
+              Clear Temporary Files
+            </button>
           </div>
-          <div class="progress-container" id="pkg-progress" style="display: none;">
+          <div
+            class="progress-container"
+            id="pkg-progress"
+            style="display: none"
+          >
             <div class="progress">
-              <div class="progress-bar" id="pkg-progress-bar" style="width: 0%;"></div>
+              <div
+                class="progress-bar"
+                id="pkg-progress-bar"
+                style="width: 0%"
+              ></div>
             </div>
             <div class="progress-info" id="pkg-progress-info">0%</div>
           </div>
@@ -254,7 +302,7 @@
                 if (data.message && data.message.trim()) {
                   log(data.message, "info");
                 }
-                
+
                 // For technical logs, show both hex and ASCII
                 const hexData = data.hex.match(/.{1,2}/g).join(" ");
                 const truncatedHex =
@@ -281,9 +329,9 @@
         }
 
         // Main tab switching
-        const mainTabs = document.querySelectorAll('.main-tab');
-        const mainTabContents = document.querySelectorAll('.main-tab-content');
-        
+        const mainTabs = document.querySelectorAll(".main-tab");
+        const mainTabContents = document.querySelectorAll(".main-tab-content");
+
         mainTabs.forEach((tab) => {
           tab.addEventListener("click", function () {
             // Remove active class from all main tabs and contents
@@ -296,25 +344,25 @@
             document.getElementById(tabId).classList.add("active");
 
             // Update port based on selected tab
-            const portInput = document.getElementById('port');
-            switch(tabId) {
-              case 'lua-tab':
-                portInput.value = '9026';
+            const portInput = document.getElementById("port");
+            switch (tabId) {
+              case "lua-tab":
+                portInput.value = "9026";
                 break;
-              case 'elf-tab':
-                portInput.value = '9021';
+              case "elf-tab":
+                portInput.value = "9021";
                 break;
-              case 'pkg-tab':
-                portInput.value = '12800';
+              case "pkg-tab":
+                portInput.value = "12800";
                 break;
             }
           });
         });
 
         // Log tab switching
-        const logTabs = document.querySelectorAll('.log-tab');
-        const logTabContents = document.querySelectorAll('.log-tab-content');
-        
+        const logTabs = document.querySelectorAll(".log-tab");
+        const logTabContents = document.querySelectorAll(".log-tab-content");
+
         logTabs.forEach((tab) => {
           tab.addEventListener("click", function () {
             // Remove active class from all log tabs and contents
@@ -329,26 +377,28 @@
         });
 
         // Update port when PS5 is selected from network scan
-        document.getElementById('availableIPs').addEventListener('change', function(e) {
-          const selectedIP = e.target.value;
-          if (selectedIP) {
-            document.getElementById('ipAddress').value = selectedIP;
-            // Keep the current port based on the active tab
-            const activeTab = document.querySelector('.main-tab.active');
-            const portInput = document.getElementById('port');
-            switch(activeTab.getAttribute('data-tab')) {
-              case 'lua-tab':
-                portInput.value = '9026';
-                break;
-              case 'elf-tab':
-                portInput.value = '9021';
-                break;
-              case 'pkg-tab':
-                portInput.value = '12800';
-                break;
+        document
+          .getElementById("availableIPs")
+          .addEventListener("change", function (e) {
+            const selectedIP = e.target.value;
+            if (selectedIP) {
+              document.getElementById("ipAddress").value = selectedIP;
+              // Keep the current port based on the active tab
+              const activeTab = document.querySelector(".main-tab.active");
+              const portInput = document.getElementById("port");
+              switch (activeTab.getAttribute("data-tab")) {
+                case "lua-tab":
+                  portInput.value = "9026";
+                  break;
+                case "elf-tab":
+                  portInput.value = "9021";
+                  break;
+                case "pkg-tab":
+                  portInput.value = "12800";
+                  break;
+              }
             }
-          }
-        });
+          });
 
         // File info display
         fileInput.addEventListener("change", function () {
@@ -395,11 +445,11 @@
         function clearFormSelections() {
           clearFileInputs();
           clearRadioSelections();
-          document.getElementById('pkg-file').value = "";
-          document.getElementById('pkg-url').value = "";
-          document.getElementById('pkg-progress').style.display = "none";
-          document.getElementById('pkg-progress-bar').style.width = "0%";
-          document.getElementById('pkg-progress-info').textContent = "0%";
+          document.getElementById("pkg-file").value = "";
+          document.getElementById("pkg-url").value = "";
+          document.getElementById("pkg-progress").style.display = "none";
+          document.getElementById("pkg-progress-bar").style.width = "0%";
+          document.getElementById("pkg-progress-info").textContent = "0%";
         }
 
         // Handle radio button changes
@@ -500,7 +550,9 @@
             logEntry.appendChild(exploitOutput);
           } else if (message.includes("Received data from device:")) {
             // Extract the actual message content
-            const content = message.replace("Received data from device:", "").trim();
+            const content = message
+              .replace("Received data from device:", "")
+              .trim();
             if (content) {
               logEntry.className = "device-message";
               logEntry.textContent = `[${timestamp}] ${content}`;
@@ -681,15 +733,13 @@
 
             if (result.success) {
               showStatus("File sent successfully!", "success");
-              log(
-                `✅ Successfully sent "${fileName}" to ${ipAddress}:${port}`
-              );
+              log(`✅ Successfully sent "${fileName}" to ${ipAddress}:${port}`);
 
               if (result.response) {
                 log(`Response from device: ${result.response}`);
                 techLog(`Device response: ${result.response}`, "receive");
               }
-              
+
               // Clear form selections after successful submission
               clearFormSelections();
             } else {
@@ -807,15 +857,13 @@
 
             if (result.success) {
               showStatus("File sent successfully!", "success");
-              log(
-                `✅ Successfully sent "${fileName}" to ${ipAddress}:${port}`
-              );
+              log(`✅ Successfully sent "${fileName}" to ${ipAddress}:${port}`);
 
               if (result.response) {
                 log(`Response from device: ${result.response}`);
                 techLog(`Device response: ${result.response}`, "receive");
               }
-              
+
               // Clear form selections after successful submission
               clearFormSelections();
             } else {
@@ -857,8 +905,9 @@
 
           // Check if either file or URL is provided
           if (fileInput.files.length === 0 && urlInput.value.trim() === "") {
-            resultDiv.innerHTML = '<div class="error-box"><h3 class="error">Validation Error</h3>' +
-                                 '<p class="error">Please either select a PKG file to upload or enter a URL.</p></div>';
+            resultDiv.innerHTML =
+              '<div class="error-box"><h3 class="error">Validation Error</h3>' +
+              '<p class="error">Please either select a PKG file to upload or enter a URL.</p></div>';
             return;
           }
 
@@ -888,8 +937,8 @@
             // Send the file using FormData
             techLog(`Request: POST /upload (multipart/form-data)`, "info");
             const xhr = new XMLHttpRequest();
-            
-            xhr.upload.addEventListener("progress", function(e) {
+
+            xhr.upload.addEventListener("progress", function (e) {
               if (e.lengthComputable) {
                 const percentComplete = (e.loaded / e.total) * 100;
                 progressBar.style.width = percentComplete + "%";
@@ -897,29 +946,39 @@
               }
             });
 
-            xhr.onload = function() {
+            xhr.onload = function () {
               if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 if (response.success) {
-                  resultDiv.innerHTML = '<div class="success-box"><h3 class="success">Installation Started!</h3>' + 
-                                       '<p class="success">' + response.response + '</p></div>';
-                  
+                  resultDiv.innerHTML =
+                    '<div class="success-box"><h3 class="success">Installation Started!</h3>' +
+                    '<p class="success">' +
+                    response.response +
+                    "</p></div>";
+
                   // Clear form selections after successful submission
                   clearFormSelections();
                 } else {
-                  resultDiv.innerHTML = '<div class="error-box"><h3 class="error">Installation Failed!</h3>' + 
-                                       '<p class="error">' + response.error + '</p></div>';
+                  resultDiv.innerHTML =
+                    '<div class="error-box"><h3 class="error">Installation Failed!</h3>' +
+                    '<p class="error">' +
+                    response.error +
+                    "</p></div>";
                 }
               } else {
-                resultDiv.innerHTML = '<div class="error-box"><h3 class="error">Error!</h3>' + 
-                                     '<p class="error">Status: ' + xhr.status + '</p></div>';
+                resultDiv.innerHTML =
+                  '<div class="error-box"><h3 class="error">Error!</h3>' +
+                  '<p class="error">Status: ' +
+                  xhr.status +
+                  "</p></div>";
               }
               progressContainer.style.display = "none";
             };
 
-            xhr.onerror = function() {
-              resultDiv.innerHTML = '<div class="error-box"><h3 class="error">Connection Error!</h3>' + 
-                                   '<p class="error">Failed to connect to the server.</p></div>';
+            xhr.onerror = function () {
+              resultDiv.innerHTML =
+                '<div class="error-box"><h3 class="error">Connection Error!</h3>' +
+                '<p class="error">Failed to connect to the server.</p></div>';
               progressContainer.style.display = "none";
             };
 
@@ -933,59 +992,64 @@
         });
 
         // Handle Clear Temporary Files button click
-        document.getElementById("clear-tmp").addEventListener("click", async function() {
-          const ipAddress = ipAddressInput.value.trim();
-          const port = parseInt(portInput.value.trim(), 10);
-          const resultDiv = document.getElementById("pkg-result");
+        document
+          .getElementById("clear-tmp")
+          .addEventListener("click", async function () {
+            const ipAddress = ipAddressInput.value.trim();
+            const port = parseInt(portInput.value.trim(), 10);
+            const resultDiv = document.getElementById("pkg-result");
 
-          // Validate form inputs
-          if (!ipAddress) {
-            showStatus("Please enter an IP address", "error");
-            return;
-          }
-
-          if (isNaN(port) || port < 0 || port > 65535) {
-            showStatus("Please enter a valid port number (0-65535)", "error");
-            return;
-          }
-
-          log(`Clearing temporary files on ${ipAddress}:${port}...`);
-          techLog(`EXECUTE: Clearing temporary files on ${ipAddress}:${port}`, "info");
-
-          try {
-            // Send request to our server
-            const response = await fetch('/clear-tmp', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                ipAddress: ipAddress,
-                port: port
-              })
-            });
-
-            if (!response.ok) {
-              throw new Error(`Server returned ${response.status}`);
+            // Validate form inputs
+            if (!ipAddress) {
+              showStatus("Please enter an IP address", "error");
+              return;
             }
 
-            const result = await response.json();
-            
-            if (result.success) {
-              resultDiv.innerHTML = `<div class="success-box"><h3 class="success">Success!</h3><p class="success">${result.response}</p></div>`;
-              log(`✅ ${result.response}`);
-              techLog(`Response: ${result.response}`, "success");
-            } else {
-              resultDiv.innerHTML = `<div class="error-box"><h3 class="error">Error!</h3><p class="error">${result.response}</p></div>`;
-              log(`❌ ${result.response}`, "error");
-              techLog(`Error: ${result.response}`, "error");
+            if (isNaN(port) || port < 0 || port > 65535) {
+              showStatus("Please enter a valid port number (0-65535)", "error");
+              return;
             }
-          } catch (error) {
-            resultDiv.innerHTML = `<div class="error-box"><h3 class="error">Connection Error!</h3><p class="error">Failed to connect to the server: ${error.message}</p></div>`;
-            log(`❌ Connection error: ${error.message}`, "error");
-            techLog(`Exception: ${error.message}`, "error");
-          }
-        });
+
+            log(`Clearing temporary files on ${ipAddress}:${port}...`);
+            techLog(
+              `EXECUTE: Clearing temporary files on ${ipAddress}:${port}`,
+              "info"
+            );
+
+            try {
+              // Send request to our server
+              const response = await fetch("/clear-tmp", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  ipAddress: ipAddress,
+                  port: port,
+                }),
+              });
+
+              if (!response.ok) {
+                throw new Error(`Server returned ${response.status}`);
+              }
+
+              const result = await response.json();
+
+              if (result.success) {
+                resultDiv.innerHTML = `<div class="success-box"><h3 class="success">Success!</h3><p class="success">${result.response}</p></div>`;
+                log(`✅ ${result.response}`);
+                techLog(`Response: ${result.response}`, "success");
+              } else {
+                resultDiv.innerHTML = `<div class="error-box"><h3 class="error">Error!</h3><p class="error">${result.response}</p></div>`;
+                log(`❌ ${result.response}`, "error");
+                techLog(`Error: ${result.response}`, "error");
+              }
+            } catch (error) {
+              resultDiv.innerHTML = `<div class="error-box"><h3 class="error">Connection Error!</h3><p class="error">Failed to connect to the server: ${error.message}</p></div>`;
+              log(`❌ Connection error: ${error.message}`, "error");
+              techLog(`Exception: ${error.message}`, "error");
+            }
+          });
 
         // Initialize with a welcome message
         log("Remote Lua Loader initialized. Ready to send files.");
@@ -1103,8 +1167,7 @@
         scanStatus.textContent = "Scanning network for PS5 devices...";
         scanStatus.style.display = "block";
         ps5Devices.style.display = "none";
-        availableIPs.innerHTML =
-          '<option value="">Select a PS5</option>';
+        availableIPs.innerHTML = '<option value="">Select a PS5</option>';
         ipAddressInput.value = ""; // Clear the IP address input
 
         try {
@@ -1127,44 +1190,47 @@
           data.activeHosts.forEach((host) => {
             const option = document.createElement("option");
             option.value = host.ip;
-            
+
             // Create port descriptions
             const portNames = {
-              9026: 'Remote Lua Loader',
-              9021: 'ELF Loader',
-              1337: 'FTP',
-              9081: 'Klog',
-              12800: 'DPIV2'
+              9026: "Remote Lua Loader",
+              9021: "ELF Loader",
+              1337: "FTP",
+              9081: "Klog",
+              12800: "DPIV2",
             };
-            
-            const portsText = host.ports.map(port => {
-              return `${port} (${portNames[port] || 'Unknown'})`;
-            }).join(', ');
-            
+
+            const portsText = host.ports
+              .map((port) => {
+                return `${port} (${portNames[port] || "Unknown"})`;
+              })
+              .join(", ");
+
             option.textContent = `PS5 (${host.ip}) - ${portsText}`;
             availableIPs.appendChild(option);
           });
 
           // Update scan status with port information
           const portCounts = {};
-          data.activeHosts.forEach(host => {
-            host.ports.forEach(port => {
+          data.activeHosts.forEach((host) => {
+            host.ports.forEach((port) => {
               portCounts[port] = (portCounts[port] || 0) + 1;
             });
           });
 
           const portStatus = Object.entries(portCounts)
             .map(([port, count]) => {
-              const portName = {
-                9026: 'Remote Lua Loader',
-                9021: 'ELF Loader',
-                1337: 'FTP',
-                9081: 'Klog',
-                12800: 'DPIV2'
-              }[port] || 'Unknown';
+              const portName =
+                {
+                  9026: "Remote Lua Loader",
+                  9021: "ELF Loader",
+                  1337: "FTP",
+                  9081: "Klog",
+                  12800: "DPIV2",
+                }[port] || "Unknown";
               return `${count} with ${portName} (${port})`;
             })
-            .join(', ');
+            .join(", ");
 
           scanStatus.className = "scan-status success";
           scanStatus.textContent = `Found ${data.activeHosts.length} PS5(s) with advertised ports: ${portStatus}`;
@@ -1196,53 +1262,223 @@
 
       // Function to handle scan results
       function handleScanResults(data) {
-        const resultArea = document.getElementById('scanResult');
-        const detailsArea = document.getElementById('detailsContent');
-        const logArea = document.getElementById('logContent');
-        
+        const resultArea = document.getElementById("scanResult");
+        const detailsArea = document.getElementById("detailsContent");
+        const logArea = document.getElementById("logContent");
+
         if (data.error) {
           resultArea.textContent = `Error: ${data.error}`;
-          log('Error scanning network: ' + data.error, 'error');
+          log("Error scanning network: " + data.error, "error");
           return;
         }
-        
+
         const localIPs = data.localIPs;
         const activeHosts = data.activeHosts;
-        
+
         // Display local IPs
-        let localIPsText = 'Local IPs:\n';
-        localIPs.forEach(ip => {
+        let localIPsText = "Local IPs:\n";
+        localIPs.forEach((ip) => {
           localIPsText += `- ${ip.interface}: ${ip.ip} (${ip.netmask})\n`;
         });
-        
+
         // Display active PS5s with their ports
-        let activeHostsText = '';
+        let activeHostsText = "";
         if (activeHosts.length > 0) {
           activeHostsText = `Found ${activeHosts.length} PS5(s):\n`;
-          activeHosts.forEach(host => {
-            const portsText = host.ports.map(port => {
-              const portNames = {
-                9026: 'Remote Lua Loader',
-                9021: 'ELF Loader',
-                1337: 'FTP',
-                9081: 'Klog',
-                12800: 'DPIV2'
-              };
-              return `${port} (${portNames[port] || 'Unknown'})`;
-            }).join(', ');
+          activeHosts.forEach((host) => {
+            const portsText = host.ports
+              .map((port) => {
+                const portNames = {
+                  9026: "Remote Lua Loader",
+                  9021: "ELF Loader",
+                  1337: "FTP",
+                  9081: "Klog",
+                  12800: "DPIV2",
+                };
+                return `${port} (${portNames[port] || "Unknown"})`;
+              })
+              .join(", ");
             activeHostsText += `- ${host.ip} - Open ports: ${portsText}\n`;
           });
         } else {
-          activeHostsText = 'No PS5s found on the network.';
+          activeHostsText = "No PS5s found on the network.";
         }
-        
-        resultArea.textContent = localIPsText + '\n' + activeHostsText;
-        
+
+        resultArea.textContent = localIPsText + "\n" + activeHostsText;
+
         // Log the results
-        log('Network scan completed', 'info');
-        log(localIPsText, 'info');
-        log(activeHostsText, 'info');
+        log("Network scan completed", "info");
+        log(localIPsText, "info");
+        log(activeHostsText, "info");
       }
+
+      // Function to handle jailbreak process
+      async function handleJailbreak() {
+        const jailbreakButton = document.getElementById("jailbreakButton");
+        const sendEtaHEN = document.getElementById("sendEtaHEN").checked;
+        const scanStatus = document.getElementById("scanStatus");
+        const logDiv = document.getElementById("log");
+        const techLogDiv = document.getElementById("techLog");
+
+        // Helper function for user-friendly logging
+        function userLog(message, type = "info") {
+          const timestamp = new Date().toLocaleTimeString();
+          const logEntry = document.createElement("div");
+          logEntry.className = type;
+          logEntry.textContent = `[${timestamp}] ${message}`;
+          logDiv.appendChild(logEntry);
+          logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // Helper function for technical logging
+        function technicalLog(message, type = "info") {
+          const timestamp = new Date().toLocaleTimeString();
+          const logEntry = document.createElement("div");
+          logEntry.innerHTML = `<span class="timestamp">[${timestamp}]</span> <span class="${type}">${message}</span>`;
+          techLogDiv.appendChild(logEntry);
+          techLogDiv.scrollTop = techLogDiv.scrollHeight;
+        }
+
+        // Disable button during process
+        jailbreakButton.disabled = true;
+        jailbreakButton.textContent = "Jailbreaking...";
+
+        try {
+          // Step 1: Scan network for PS5
+          scanStatus.className = "scan-status scanning";
+          scanStatus.textContent = "Scanning for PS5...";
+          scanStatus.style.display = "block";
+
+          userLog("Starting network scan for PS5...");
+          technicalLog("Initiating network scan", "info");
+
+          const response = await fetch("/scan-network");
+          const data = await response.json();
+
+          if (
+            data.error ||
+            !data.activeHosts ||
+            data.activeHosts.length === 0
+          ) {
+            throw new Error("No PS5 found on network");
+          }
+
+          // Find PS5 with port 9026
+          const ps5 = data.activeHosts.find((host) =>
+            host.ports.includes(9026)
+          );
+          if (!ps5) {
+            throw new Error(
+              "No PS5 found running remote lua loader (port 9026)"
+            );
+          }
+
+          // Update status and IP field
+          scanStatus.textContent = `Found PS5 at ${ps5.ip}`;
+          document.getElementById("ipAddress").value = ps5.ip;
+          document.getElementById("port").value = "9026";
+
+          userLog(`Found PS5 at ${ps5.ip}`);
+          technicalLog(`PS5 detected at ${ps5.ip} with port 9026`, "info");
+
+          // Step 2: Send UMTX.lua
+          userLog("Sending UMTX.lua...");
+          technicalLog("Initiating UMTX.lua transfer", "info");
+
+          const umtxResponse = await fetch("/send-lua", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ipAddress: ps5.ip,
+              port: 9026,
+              fileName: "umtx.lua",
+            }),
+          });
+
+          const umtxResult = await umtxResponse.json();
+          if (!umtxResult.success || !umtxResult.response.includes("done!")) {
+            throw new Error("UMTX.lua failed to execute properly");
+          }
+
+          userLog("UMTX.lua executed successfully!");
+          technicalLog("UMTX.lua execution confirmed", "success");
+
+          // Step 3: Send elf_loader.lua
+          userLog("Sending elf_loader.lua...");
+          technicalLog("Initiating elf_loader.lua transfer", "info");
+
+          const elfLoaderResponse = await fetch("/send-lua", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ipAddress: ps5.ip,
+              port: 9026,
+              fileName: "elf_loader.lua",
+            }),
+          });
+
+          const elfLoaderResult = await elfLoaderResponse.json();
+          if (
+            !elfLoaderResult.success ||
+            !elfLoaderResult.response.includes("done")
+          ) {
+            throw new Error("elf_loader.lua failed to execute properly");
+          }
+
+          userLog("elf_loader.lua executed successfully!");
+          technicalLog("elf_loader.lua execution confirmed", "success");
+
+          // Step 4: Send etaHEN.bin if checkbox is checked
+          if (sendEtaHEN) {
+            userLog("Sending etaHEN.bin...");
+            technicalLog("Initiating etaHEN.bin transfer", "info");
+
+            const etaHENResponse = await fetch("/send-elf", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                ipAddress: ps5.ip,
+                port: 9021,
+                fileName: "etaHEN.bin",
+              }),
+            });
+
+            const etaHENResult = await etaHENResponse.json();
+            if (!etaHENResult.success) {
+              throw new Error("Failed to send etaHEN.bin");
+            }
+
+            userLog("etaHEN.bin sent successfully!");
+            technicalLog("etaHEN.bin transfer completed", "success");
+          }
+
+          // Update status on completion
+          scanStatus.className = "scan-status success";
+          scanStatus.textContent = "Jailbreak completed successfully!";
+          userLog("✅ Jailbreak process completed!");
+          technicalLog("Jailbreak sequence completed successfully", "success");
+        } catch (error) {
+          scanStatus.className = "scan-status error";
+          scanStatus.textContent = `Error: ${error.message}`;
+          userLog(`❌ Jailbreak failed: ${error.message}`, "error");
+          technicalLog(`Jailbreak error: ${error.message}`, "error");
+        } finally {
+          // Re-enable button
+          jailbreakButton.disabled = false;
+          jailbreakButton.textContent = "Jailbreak!";
+        }
+      }
+
+      // Add event listener for jailbreak button
+      document
+        .getElementById("jailbreakButton")
+        .addEventListener("click", handleJailbreak);
     </script>
     <p id="bacedgod">
       Thank you,
